@@ -7,3 +7,8 @@ as part of our SE BSc [Daniella Vardi](https://github.com/DaniellaVardi) and I h
 
 The problem, the suggested strategy and the mathematical approach behind it are beautifully described by the [Veritasium youtube video](https://www.youtube.com/watch?v=iSNsgj1OCLA)
 
+## Getting started
+1. Clone the repository using `git clone https://github.com/Noam-Levy/The100Prisoners.git`
+2. Change to the repository working directory using `cd The100Prisoners`
+3. install the required dependencies using `pip install -r requirements.txt` or `python -m pip install -r requirements.txt`
+4. run using `python main.py`
