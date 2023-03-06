@@ -1,9 +1,13 @@
 import random
- 
-class Model():
+from strategy import Strategy
+from abstractSubject import AbstractSubject
+from abstractObserver import AbstractObserver 
+
+class Model(AbstractSubject):
     
-    def __init__(self, number_of_prisoners : int = 2,
-                 strategy: function = None, simulations: int = 1):
+    _observers: list[AbstractObserver] = []
+    
+    def __init__(self, number_of_prisoners : int = 2, strategy: Strategy = None, simulations: int = 1):
         """
           Initialize simulation model\n
           Parameters:
@@ -42,11 +46,11 @@ class Model():
             raise ValueError("invalid number of simulations")
         self.simulations = n
 
-    def setStrategy(self, strategy: function):
+    def setStrategy(self, strategy: Strategy):
       """
         Sets prisoners strategy\n
         Parameters: 
-          strategy (function) - prisoners guessing strategy
+          strategy (Strategy) - prisoners guessing strategy
         Returns:
           none
       """
@@ -54,11 +58,23 @@ class Model():
           raise ValueError("invalid strategy")
       self.strategy = strategy
     
-    def guessRandomly(self):
-        pass
+    def run(self):
+      """
+        executes simulation implementing selected prisoners strategy\n
+        Returns:
+          simulation results
+      """
+      return self.strategy.execute()
     
-    def optimizedGuess(self):
-        pass
+    def attach(self, observer: AbstractObserver):
+        self._observers.append(observer)
+      
+    def detach(self, observer: AbstractObserver):
+        self._observers.remove(observer)
+
+    def notify(self):
+        for obs in self._observers:
+            obs.update(self) # TODO: consider notify implementation.
 
 
     
