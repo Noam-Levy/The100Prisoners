@@ -11,4 +11,4 @@ The problem, the suggested strategy and the mathematical approach behind it are 
 1. Clone the repository using `git clone https://github.com/Noam-Levy/The100Prisoners.git`
 2. Change to the repository working directory using `cd The100Prisoners`
 3. install the required dependencies using `pip install -r requirements.txt` or `python -m pip install -r requirements.txt`
-4. run using `python main.py`
+4. run using `python /src/main.py`
