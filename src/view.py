@@ -46,7 +46,6 @@ class View(AbstractSubject):
     random_label.pack()
     strategy_label.pack()
 
-
   
   def _drawBoxMatrix(self):
     matrix_frame = ttk.Frame(self.root, bootstyle=LIGHT)
