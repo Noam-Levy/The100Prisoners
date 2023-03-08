@@ -1,9 +1,7 @@
 import random
 from strategy import Strategy
-from abstractSubject import AbstractSubject
-from abstractObserver import AbstractObserver 
-
-class Model(AbstractSubject):
+from listener import ModelEventsListener
+class Model():
         
     def __init__(self, number_of_prisoners : int = 2, strategy: Strategy = None, simulations: int = 1):
         """
@@ -15,7 +13,7 @@ class Model(AbstractSubject):
           Returns:
             Model instance
         """
-        self._observers: list[AbstractObserver] = []
+        self._observers: list[ModelEventsListener] = []
         self.number_of_prisoners = self.setNumberOfPrisoners(number_of_prisoners)
         self.strategy = strategy
         self.simulations = self.setNumberOfSimulations(simulations)
@@ -67,15 +65,11 @@ class Model(AbstractSubject):
           raise ValueError("Strategy was not defined")
       return self.strategy.execute()
     
-    def attach(self, observer: AbstractObserver):
+    def attach(self, observer: ModelEventsListener):
         self._observers.append(observer)
       
-    def detach(self, observer: AbstractObserver):
+    def detach(self, observer: ModelEventsListener):
         self._observers.remove(observer)
-
-    def notify(self):
-        for obs in self._observers:
-            obs.update(self) # TODO: consider notify implementation.
 
 
     
