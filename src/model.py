@@ -3,7 +3,7 @@ from strategy import Strategy
 from listener import ModelEventsListener
 class Model():
         
-    def __init__(self, number_of_prisoners : int = 2, strategy: Strategy = None, simulations: int = 1):
+    def __init__(self, number_of_prisoners: int = 2, strategy: Strategy = None, simulations: int = 1):
         """
           Initialize simulation model\n
           Parameters:
@@ -14,9 +14,9 @@ class Model():
             Model instance
         """
         self._observers: list[ModelEventsListener] = []
-        self.number_of_prisoners = self.setNumberOfPrisoners(number_of_prisoners)
+        self.setNumberOfPrisoners(number_of_prisoners)
+        self.setNumberOfSimulations(simulations)
         self.strategy = strategy
-        self.simulations = self.setNumberOfSimulations(simulations)
         self.boxes = random.shuffle([i for i in range(self.number_of_prisoners)]) # shuffle boxes values
     
     def setNumberOfPrisoners(self, n: int):
