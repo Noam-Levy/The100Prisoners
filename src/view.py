@@ -4,6 +4,9 @@ from tkinter import PhotoImage
 
 from listener import UIEventsListener
 
+DEFAULT_FONT = "Helvetica"
+DEFAULT_FONT_SIZE = 10
+
 class View():
 
   def __init__(self):
@@ -13,32 +16,31 @@ class View():
     photo = PhotoImage(file = './src/images/prison.png')
     self.root.iconphoto(False, photo)
     self.root.geometry("1200x600")
-    self._drawMenuDrawer()
-    self._drawBoxMatrix()
+    self.run()
 
   def _drawMenuDrawer(self):
-    settings_frame = ttk.Frame(self.root, bootstyle = "light")
-    statistics_label = ttk.Label(settings_frame,text = "Statistics", font=("Helvetica", 15),bootstyle = "inverse light")
+    settings_frame = ttk.Frame(self.root, bootstyle=LIGHT)
+    statistics_label = ttk.Label(settings_frame,text = "Statistics", font=(DEFAULT_FONT, DEFAULT_FONT_SIZE + 5), bootstyle=(LIGHT, INVERSE))
 
-    prisonerNum_label = ttk.Label(settings_frame,text = "Prisoner Number :", font=("Helvetica", 10),bootstyle = "inverse light")
-    boxNum_label = ttk.Label(settings_frame,text = "Box Number :", font=("Helvetica", 10),bootstyle = "inverse light")
-    foundNum_label = ttk.Label(settings_frame,text = "Found Number :", font=("Helvetica", 10),bootstyle = "inverse light")
-    guessNum_label = ttk.Label(settings_frame,text = "Number of Guesses :", font=("Helvetica", 10),bootstyle = "inverse light")
+    prisonerNum_label = ttk.Label(settings_frame,text = "Prisoner Number :", font=(DEFAULT_FONT, DEFAULT_FONT_SIZE),bootstyle =(LIGHT, INVERSE))
+    boxNum_label = ttk.Label(settings_frame,text = "Box Number :", font=(DEFAULT_FONT, DEFAULT_FONT_SIZE),bootstyle=(LIGHT, INVERSE))
+    foundNum_label = ttk.Label(settings_frame,text = "Found Number :", font=(DEFAULT_FONT, DEFAULT_FONT_SIZE),bootstyle=(LIGHT, INVERSE))
+    guessNum_label = ttk.Label(settings_frame,text = "Number of Guesses :", font=(DEFAULT_FONT, DEFAULT_FONT_SIZE),bootstyle=(LIGHT, INVERSE))
 
-    setting_label = ttk.Label(settings_frame,text = "Settings", font=("Helvetica", 15),bootstyle = "inverse light")
-    priNum_label = ttk.Label(settings_frame,text = "# of prisoners", font=("Helvetica", 10),bootstyle = "inverse light")
-    simNum_label = ttk.Label(settings_frame,text = "# of simulations", font=("Helvetica", 10),bootstyle = "inverse light")
-    random_label = ttk.Label(settings_frame,text = "select randomly", font=("Helvetica", 10),bootstyle = "inverse light")
-    strategy_label = ttk.Label(settings_frame,text = "apply strategy", font=("Helvetica", 10),bootstyle = "inverse light")
+    setting_label = ttk.Label(settings_frame,text = "Settings", font=(DEFAULT_FONT, DEFAULT_FONT_SIZE + 5), bootstyle=(LIGHT, INVERSE))
+    priNum_label = ttk.Label(settings_frame,text = "# of prisoners", font=(DEFAULT_FONT, DEFAULT_FONT_SIZE), bootstyle=(LIGHT, INVERSE))
+    simNum_label = ttk.Label(settings_frame,text = "# of simulations", font=(DEFAULT_FONT, DEFAULT_FONT_SIZE), bootstyle=(LIGHT, INVERSE))
+    random_label = ttk.Label(settings_frame,text = "select randomly", font=(DEFAULT_FONT, DEFAULT_FONT_SIZE), bootstyle=(LIGHT, INVERSE))
+    strategy_label = ttk.Label(settings_frame,text = "apply strategy", font=(DEFAULT_FONT, DEFAULT_FONT_SIZE), bootstyle=(LIGHT, INVERSE))
 
     statistics_label.pack()
-    ttk.Separator(settings_frame, bootstyle="secondary").pack()
+    ttk.Separator(settings_frame, bootstyle=SECONDARY).pack()
     prisonerNum_label.pack()
     boxNum_label.pack()
     foundNum_label.pack()
     guessNum_label.pack()
     settings_frame.pack()
-    ttk.Separator(settings_frame, bootstyle="secondary").pack()
+    ttk.Separator(settings_frame, bootstyle=SECONDARY).pack()
     setting_label.pack()
     priNum_label.pack()
     simNum_label.pack()
@@ -53,6 +55,8 @@ class View():
     matrix_frame.pack()
 
   def run(self):
+    self._drawMenuDrawer()
+    self._drawBoxMatrix()
     self.root.mainloop()
 
   def attach(self, observer: UIEventsListener):
