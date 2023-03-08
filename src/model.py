@@ -4,9 +4,7 @@ from abstractSubject import AbstractSubject
 from abstractObserver import AbstractObserver 
 
 class Model(AbstractSubject):
-    
-    _observers: list[AbstractObserver] = []
-    
+        
     def __init__(self, number_of_prisoners : int = 2, strategy: Strategy = None, simulations: int = 1):
         """
           Initialize simulation model\n
@@ -17,6 +15,7 @@ class Model(AbstractSubject):
           Returns:
             Model instance
         """
+        self._observers: list[AbstractObserver] = []
         self.number_of_prisoners = self.setNumberOfPrisoners(number_of_prisoners)
         self.strategy = strategy
         self.simulations = self.setNumberOfSimulations(simulations)
@@ -64,6 +63,8 @@ class Model(AbstractSubject):
         Returns:
           simulation results
       """
+      if not self.strategy:
+          raise ValueError("Strategy was not defined")
       return self.strategy.execute()
     
     def attach(self, observer: AbstractObserver):
