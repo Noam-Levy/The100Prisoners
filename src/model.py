@@ -74,8 +74,8 @@ class Model(AbstractSubject):
         self._observers.remove(observer)
 
     def notify(self):
-        for obs in self._observers:
-            obs.update(self) # TODO: consider notify implementation.
+        for observer in self._observers:
+            observer.update(self) # TODO: consider notify implementation.
 
 
     
