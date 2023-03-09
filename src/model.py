@@ -1,4 +1,3 @@
-import random
 from strategy import Strategy
 from listener import ModelEventsListener
 class Model():
@@ -17,7 +16,7 @@ class Model():
         self.setNumberOfPrisoners(number_of_prisoners)
         self.setNumberOfSimulations(simulations)
         self.strategy = strategy
-        self.boxes = random.shuffle([i for i in range(self.number_of_prisoners)]) # shuffle boxes values
+        
     
     def setNumberOfPrisoners(self, n: int):
         """
@@ -63,7 +62,7 @@ class Model():
       """
       if not self.strategy:
           raise ValueError("Strategy was not defined")
-      return self.strategy.execute()
+      return self.strategy.execute(self.number_of_prisoners, self.simulations)
     
     def attach(self, observer: ModelEventsListener):
         self._observers.append(observer)
