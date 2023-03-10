@@ -25,27 +25,6 @@ class View():
 
     simulation_settings_frame.pack()
     menu_frame.pack(side=LEFT, fill=Y)
-
-
-
-    # settings_frame = ttk.Frame(self.root, bootstyle=LIGHT)
-    # statistics_label = ttk.Label(settings_frame,text = "Statistics", font=(DEFAULT_FONT, DEFAULT_FONT_SIZE + 5), bootstyle=(LIGHT, INVERSE))
-
-    # prisonerNum_label = ttk.Label(settings_frame,text = "Prisoner Number :", font=(DEFAULT_FONT, DEFAULT_FONT_SIZE),bootstyle =(LIGHT, INVERSE))
-    # boxNum_label = ttk.Label(settings_frame,text = "Box Number :", font=(DEFAULT_FONT, DEFAULT_FONT_SIZE),bootstyle=(LIGHT, INVERSE))
-    # foundNum_label = ttk.Label(settings_frame,text = "Found Number :", font=(DEFAULT_FONT, DEFAULT_FONT_SIZE),bootstyle=(LIGHT, INVERSE))
-    # guessNum_label = ttk.Label(settings_frame,text = "Number of Guesses :", font=(DEFAULT_FONT, DEFAULT_FONT_SIZE),bootstyle=(LIGHT, INVERSE))
-
-    
-
-    # settings_frame.pack(side=LEFT, fill=Y)
-    # statistics_label.pack(padx=10, pady=10)
-    # ttk.Separator(settings_frame, bootstyle=SECONDARY).pack(side=LEFT, padx=10,pady=10)
-    # prisonerNum_label.pack(padx=10, pady=(400,10))
-
-    # boxNum_label.pack(padx=10, pady=10)
-    # foundNum_label.pack(padx=10, pady=10)
-    # guessNum_label.pack(padx=10, pady=10)
     
 
   def _drawSimulationSettingsFrame(self, parent_frame):
@@ -82,7 +61,6 @@ class View():
     ttk.Scale(simulations_num_frame, bootstyle=DARK).pack(side=RIGHT, padx=10, pady=10)
 
     return simulations_num_frame
-
 
 
   def _drawBoxMatrix(self):
