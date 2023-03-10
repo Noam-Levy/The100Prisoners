@@ -28,31 +28,44 @@ class View():
     guessNum_label = ttk.Label(settings_frame,text = "Number of Guesses :", font=(DEFAULT_FONT, DEFAULT_FONT_SIZE),bootstyle=(LIGHT, INVERSE))
 
     setting_label = ttk.Label(settings_frame,text = "Settings", font=(DEFAULT_FONT, DEFAULT_FONT_SIZE + 5), bootstyle=(LIGHT, INVERSE))
+
     priNum_label = ttk.Label(settings_frame,text = "# of prisoners", font=(DEFAULT_FONT, DEFAULT_FONT_SIZE), bootstyle=(LIGHT, INVERSE))
+    priNum_scroll = ttk.Scrollbar(settings_frame, orient=HORIZONTAL, bootstyle="secondary")
+
     simNum_label = ttk.Label(settings_frame,text = "# of simulations", font=(DEFAULT_FONT, DEFAULT_FONT_SIZE), bootstyle=(LIGHT, INVERSE))
-    random_label = ttk.Label(settings_frame,text = "select randomly", font=(DEFAULT_FONT, DEFAULT_FONT_SIZE), bootstyle=(LIGHT, INVERSE))
-    strategy_label = ttk.Label(settings_frame,text = "apply strategy", font=(DEFAULT_FONT, DEFAULT_FONT_SIZE), bootstyle=(LIGHT, INVERSE))
 
-    statistics_label.pack()
-    ttk.Separator(settings_frame, bootstyle=SECONDARY).pack()
-    prisonerNum_label.pack()
-    boxNum_label.pack()
-    foundNum_label.pack()
-    guessNum_label.pack()
-    settings_frame.pack()
-    ttk.Separator(settings_frame, bootstyle=SECONDARY).pack()
-    setting_label.pack()
-    priNum_label.pack()
-    simNum_label.pack()
-    random_label.pack()
-    strategy_label.pack()
+    random_label = ttk.Checkbutton(settings_frame,text = "select randomly", bootstyle="SECONDARY-ROUND-TOGGLE")
+    strategy_label = ttk.Checkbutton(settings_frame,text = "apply strategy", bootstyle="SECONDARY-ROUND-TOGGLE")
+    start_button = ttk.Button(settings_frame,text = "Start",bootstyle="success", command=self.on_start)
+    quit_button = ttk.Button(settings_frame,text = "Quit", bootstyle="danger", command=self.on_quit)
 
-  
+    settings_frame.pack(side=LEFT, fill=Y)
+    statistics_label.pack(padx=10, pady=10)
+    ttk.Separator(settings_frame, bootstyle=SECONDARY).pack(side=LEFT, padx=10,pady=10)
+    prisonerNum_label.pack(padx=10, pady=(400,10))
+
+    boxNum_label.pack(padx=10, pady=10)
+    foundNum_label.pack(padx=10, pady=10)
+    guessNum_label.pack(padx=10, pady=10)
+    
+
+    ttk.Separator(settings_frame, bootstyle=SECONDARY).pack(side=LEFT, padx=10,pady=10)
+    setting_label.pack(padx=10, pady=10)
+    priNum_label.pack(padx=10, pady=10)
+    priNum_scroll.pack(side=LEFT)
+    simNum_label.pack(padx=10, pady=10)
+
+    random_label.pack(padx=10, pady=10)
+    strategy_label.pack(padx=10, pady=10)
+    start_button.pack(side=LEFT, expand=YES, padx=10, pady=(15,10))
+    quit_button.pack(side=LEFT, expand=YES, padx=10, pady=(15,10))
+
+
   def _drawBoxMatrix(self):
     matrix_frame = ttk.Frame(self.root, bootstyle=LIGHT)
-    label = ttk.Label(matrix_frame, text="Simulation viewer")
-    label.pack()
-    matrix_frame.pack()
+    label = ttk.Label(matrix_frame, text="Simulation viewer", font=(DEFAULT_FONT, DEFAULT_FONT_SIZE + 5), bootstyle=(LIGHT, INVERSE))
+    label.pack(pady=10)
+    matrix_frame.pack(pady=10)
 
   def run(self):
     self._drawMenuDrawer()
@@ -65,3 +78,10 @@ class View():
   def detach(self, observer: UIEventsListener):
     self._observers.remove(observer)
 
+  
+  
+  def on_start(self):
+    return
+
+  def on_quit(self):
+    return
