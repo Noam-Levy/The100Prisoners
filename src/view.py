@@ -19,46 +19,70 @@ class View():
     self.run()
 
   def _drawMenuDrawer(self):
-    settings_frame = ttk.Frame(self.root, bootstyle=LIGHT)
-    statistics_label = ttk.Label(settings_frame,text = "Statistics", font=(DEFAULT_FONT, DEFAULT_FONT_SIZE + 5), bootstyle=(LIGHT, INVERSE))
+    menu_frame = ttk.Frame(self.root, bootstyle=LIGHT)
 
-    prisonerNum_label = ttk.Label(settings_frame,text = "Prisoner Number :", font=(DEFAULT_FONT, DEFAULT_FONT_SIZE),bootstyle =(LIGHT, INVERSE))
-    boxNum_label = ttk.Label(settings_frame,text = "Box Number :", font=(DEFAULT_FONT, DEFAULT_FONT_SIZE),bootstyle=(LIGHT, INVERSE))
-    foundNum_label = ttk.Label(settings_frame,text = "Found Number :", font=(DEFAULT_FONT, DEFAULT_FONT_SIZE),bootstyle=(LIGHT, INVERSE))
-    guessNum_label = ttk.Label(settings_frame,text = "Number of Guesses :", font=(DEFAULT_FONT, DEFAULT_FONT_SIZE),bootstyle=(LIGHT, INVERSE))
+    simulation_settings_frame = self._drawSimulationSettingsFrame(menu_frame)
 
-    setting_label = ttk.Label(settings_frame,text = "Settings", font=(DEFAULT_FONT, DEFAULT_FONT_SIZE + 5), bootstyle=(LIGHT, INVERSE))
+    simulation_settings_frame.pack()
+    menu_frame.pack(side=LEFT, fill=Y)
 
-    priNum_label = ttk.Label(settings_frame,text = "# of prisoners", font=(DEFAULT_FONT, DEFAULT_FONT_SIZE), bootstyle=(LIGHT, INVERSE))
-    priNum_scroll = ttk.Scrollbar(settings_frame, orient=HORIZONTAL, bootstyle="secondary")
 
-    simNum_label = ttk.Label(settings_frame,text = "# of simulations", font=(DEFAULT_FONT, DEFAULT_FONT_SIZE), bootstyle=(LIGHT, INVERSE))
 
-    random_label = ttk.Checkbutton(settings_frame,text = "select randomly", bootstyle="SECONDARY-ROUND-TOGGLE")
-    strategy_label = ttk.Checkbutton(settings_frame,text = "apply strategy", bootstyle="SECONDARY-ROUND-TOGGLE")
-    start_button = ttk.Button(settings_frame,text = "Start",bootstyle="success", command=self.on_start)
-    quit_button = ttk.Button(settings_frame,text = "Quit", bootstyle="danger", command=self.on_quit)
+    # settings_frame = ttk.Frame(self.root, bootstyle=LIGHT)
+    # statistics_label = ttk.Label(settings_frame,text = "Statistics", font=(DEFAULT_FONT, DEFAULT_FONT_SIZE + 5), bootstyle=(LIGHT, INVERSE))
 
-    settings_frame.pack(side=LEFT, fill=Y)
-    statistics_label.pack(padx=10, pady=10)
-    ttk.Separator(settings_frame, bootstyle=SECONDARY).pack(side=LEFT, padx=10,pady=10)
-    prisonerNum_label.pack(padx=10, pady=(400,10))
+    # prisonerNum_label = ttk.Label(settings_frame,text = "Prisoner Number :", font=(DEFAULT_FONT, DEFAULT_FONT_SIZE),bootstyle =(LIGHT, INVERSE))
+    # boxNum_label = ttk.Label(settings_frame,text = "Box Number :", font=(DEFAULT_FONT, DEFAULT_FONT_SIZE),bootstyle=(LIGHT, INVERSE))
+    # foundNum_label = ttk.Label(settings_frame,text = "Found Number :", font=(DEFAULT_FONT, DEFAULT_FONT_SIZE),bootstyle=(LIGHT, INVERSE))
+    # guessNum_label = ttk.Label(settings_frame,text = "Number of Guesses :", font=(DEFAULT_FONT, DEFAULT_FONT_SIZE),bootstyle=(LIGHT, INVERSE))
 
-    boxNum_label.pack(padx=10, pady=10)
-    foundNum_label.pack(padx=10, pady=10)
-    guessNum_label.pack(padx=10, pady=10)
     
 
-    ttk.Separator(settings_frame, bootstyle=SECONDARY).pack(side=LEFT, padx=10,pady=10)
-    setting_label.pack(padx=10, pady=10)
-    priNum_label.pack(padx=10, pady=10)
-    priNum_scroll.pack(side=LEFT)
-    simNum_label.pack(padx=10, pady=10)
+    # settings_frame.pack(side=LEFT, fill=Y)
+    # statistics_label.pack(padx=10, pady=10)
+    # ttk.Separator(settings_frame, bootstyle=SECONDARY).pack(side=LEFT, padx=10,pady=10)
+    # prisonerNum_label.pack(padx=10, pady=(400,10))
 
-    random_label.pack(padx=10, pady=10)
-    strategy_label.pack(padx=10, pady=10)
-    start_button.pack(side=LEFT, expand=YES, padx=10, pady=(15,10))
-    quit_button.pack(side=LEFT, expand=YES, padx=10, pady=(15,10))
+    # boxNum_label.pack(padx=10, pady=10)
+    # foundNum_label.pack(padx=10, pady=10)
+    # guessNum_label.pack(padx=10, pady=10)
+    
+
+  def _drawSimulationSettingsFrame(self, parent_frame):
+    setting_frame = ttk.Frame(parent_frame, bootstyle=LIGHT)
+    ##ttk.Separator(setting_frame, bootstyle=SECONDARY).pack()
+    ttk.Label(setting_frame,text = "Settings", font=(DEFAULT_FONT, DEFAULT_FONT_SIZE + 5), bootstyle=(LIGHT, INVERSE)).pack(padx=10, pady=10)
+
+    prisoners_num_frame = self._drawSimulationPrisonersFrame(setting_frame)
+    prisoners_num_frame.pack()
+    
+    simulations_num_frame = self._drawSimulationSimulationsFrame(setting_frame)
+    simulations_num_frame.pack()
+
+    ttk.Checkbutton(setting_frame,text = "select randomly", bootstyle=(SECONDARY, ROUND, TOGGLE)).pack(padx=10, pady=10)
+    ttk.Checkbutton(setting_frame,text = "apply strategy", bootstyle=(SECONDARY, ROUND, TOGGLE)).pack(padx=10, pady=10)
+    
+    ttk.Button(setting_frame,text = "Start",bootstyle=SUCCESS, command=self.on_start).pack(side=LEFT, expand=YES, pady=(15,10))
+    ttk.Button(setting_frame,text = "Quit", bootstyle=DANGER, command=self.on_quit).pack(side=LEFT, expand=YES, pady=(15,10))
+
+    return setting_frame
+  
+  def _drawSimulationPrisonersFrame(self, parent_frame):
+    prisoners_num_frame = ttk.Frame(parent_frame, bootstyle=LIGHT)
+
+    ttk.Label(prisoners_num_frame,text = "# of prisoners", font=(DEFAULT_FONT, DEFAULT_FONT_SIZE), bootstyle=(LIGHT, INVERSE)).pack(side=LEFT, padx=10, pady=10)
+    ttk.Scale(prisoners_num_frame, bootstyle=DARK).pack(side=RIGHT, padx=10, pady=10)
+
+    return prisoners_num_frame
+  
+  def _drawSimulationSimulationsFrame(self, parent_frame):
+    simulations_num_frame = ttk.Frame(parent_frame, bootstyle=LIGHT)
+
+    ttk.Label(simulations_num_frame,text = "# of simulations", font=(DEFAULT_FONT, DEFAULT_FONT_SIZE), bootstyle=(LIGHT, INVERSE)).pack(side=LEFT, padx=10, pady=10)
+    ttk.Scale(simulations_num_frame, bootstyle=DARK).pack(side=RIGHT, padx=10, pady=10)
+
+    return simulations_num_frame
+
 
 
   def _drawBoxMatrix(self):
@@ -78,8 +102,6 @@ class View():
   def detach(self, observer: UIEventsListener):
     self._observers.remove(observer)
 
-  
-  
   def on_start(self):
     return
 
