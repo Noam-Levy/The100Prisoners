@@ -5,11 +5,15 @@ from tkinter import PhotoImage
 from listener import UIEventsListener
 
 DEFAULT_FONT = "Helvetica"
+DEFAULT_HEADERS_SIZE = 20
 DEFAULT_FONT_SIZE = 10
 DEFAULT_PADDING = 10
 
 LIGHT_BG_HEX = '#ABB6C2'
 DARK_FG_HEX = '#20374C'
+
+DEFAULT_PRISONERS_COUNT = 100
+DEFAULT_SIMULATIONS_COUNT = 1000
 
 class View():
 
@@ -18,9 +22,9 @@ class View():
     self.root = ttk.Window(title="The 100 Prisoners", themename="superhero", size=(1200,600), iconphoto='./src/images/prison.png')
     self.root.style.configure('TCheckbutton', background=LIGHT_BG_HEX, foreground=DARK_FG_HEX)
     self.root.style.configure('TScale', background=LIGHT_BG_HEX, thumbcolor=DARK_FG_HEX)
-    self.strategySelector = ttk.IntVar()
-    self.numberOfPrisoners = ttk.IntVar(value=100)
-    self.numberOfSimulations = ttk.IntVar(value=1000)
+    self.strategySelector = ttk.IntVar(value=-1)
+    self.numberOfPrisoners = ttk.IntVar(value=DEFAULT_PRISONERS_COUNT)
+    self.numberOfSimulations = ttk.IntVar(value=DEFAULT_SIMULATIONS_COUNT)
     self.prisonerData = {}
     self.run()
 
@@ -53,18 +57,26 @@ class View():
   
   def _drawStatisticsFrame(self, parent_frame):
     statistics_frame = ttk.Frame(parent_frame, bootstyle=LIGHT)
-    ttk.Label(statistics_frame, text = "Simulation Statistics", font=(DEFAULT_FONT, 2*DEFAULT_FONT_SIZE), bootstyle=(LIGHT, INVERSE)).pack()
+    ttk.Label(statistics_frame, text = "Simulation Statistics", font=(DEFAULT_FONT, DEFAULT_HEADERS_SIZE), bootstyle=(LIGHT, INVERSE)).pack()
     
     return statistics_frame
    
   def _drawSimulationSettingsFrame(self, parent_frame):
     def _setNumberOfPrisonersLabel(value):
       prisoners_num_label.config(text = "{:03.0f}".format(int(float(value))))
+    
     def _setNumberOfSimulationsLabel(value):
       simulations_num_label.config(text = "{:04.0f}".format(int(float(value))))
+    
+    def _on_reset():
+      self.numberOfPrisoners.set(DEFAULT_PRISONERS_COUNT)
+      _setNumberOfPrisonersLabel(DEFAULT_PRISONERS_COUNT)
+      self.numberOfSimulations.set(DEFAULT_SIMULATIONS_COUNT)
+      _setNumberOfSimulationsLabel(DEFAULT_SIMULATIONS_COUNT)
+      self.strategySelector.set(-1)
 
     setting_frame = ttk.Frame(parent_frame, bootstyle=LIGHT)
-    ttk.Label(setting_frame,text = "Settings", font=(DEFAULT_FONT, DEFAULT_FONT_SIZE + 5), bootstyle=(LIGHT, INVERSE))\
+    ttk.Label(setting_frame,text = "Settings", font=(DEFAULT_FONT, DEFAULT_HEADERS_SIZE), bootstyle=(LIGHT, INVERSE))\
       .pack(padx=DEFAULT_PADDING, pady=DEFAULT_PADDING)
 
     prisoners_num_frame = ttk.Frame(setting_frame, bootstyle=LIGHT)   
@@ -111,25 +123,26 @@ class View():
     ttk.Checkbutton(setting_frame,
                     text = "select randomly",
                     variable=self.strategySelector,
-                    onvalue=1,
-                    offvalue=0,
+                    onvalue=0,
+                    offvalue=-1,
                     bootstyle=(SECONDARY, ROUND, TOGGLE),
                     style='TCheckbutton').pack(padx=DEFAULT_PADDING, pady=DEFAULT_PADDING)
     ttk.Checkbutton(setting_frame,
                     text = "apply strategy",
                     variable=self.strategySelector,
-                    onvalue=-1,
-                    offvalue=0,
+                    onvalue=1,
+                    offvalue=-1,
                     bootstyle=(SECONDARY, ROUND, TOGGLE),
                     style='TCheckbutton').pack(padx=DEFAULT_PADDING, pady=DEFAULT_PADDING)   
     ttk.Button(setting_frame,text = "Start",bootstyle=SUCCESS, command=self.on_start).pack(side=LEFT, expand=YES, pady=DEFAULT_PADDING)
+    ttk.Button(setting_frame,text = "Reset settings",bootstyle=SECONDARY, command=_on_reset).pack(side=LEFT, expand=YES, pady=DEFAULT_PADDING)
     ttk.Button(setting_frame,text = "Quit", bootstyle=DANGER, command=self.on_quit).pack(side=LEFT, expand=YES, pady=DEFAULT_PADDING)
 
     return setting_frame
 
   def _drawBoxMatrix(self):
     matrix_frame = ttk.Frame(self.root, bootstyle=LIGHT)
-    label = ttk.Label(matrix_frame, text="Simulation viewer", font=(DEFAULT_FONT, DEFAULT_FONT_SIZE + 5), bootstyle=(LIGHT, INVERSE))
+    label = ttk.Label(matrix_frame, text="Simulation viewer", font=(DEFAULT_FONT, DEFAULT_HEADERS_SIZE), bootstyle=(LIGHT, INVERSE))
     label.pack(pady=DEFAULT_PADDING)
     matrix_frame.pack(pady=DEFAULT_PADDING)
   
