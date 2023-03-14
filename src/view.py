@@ -4,6 +4,9 @@ from tkinter import PhotoImage
 
 from listener import UIEventsListener
 
+DEFAULT_SCREEN_WIDTH = 1400
+DEFAULT_SCREEN_HEIGHT = 800
+
 DEFAULT_FONT = "Helvetica"
 DEFAULT_HEADERS_SIZE = 20
 DEFAULT_FONT_SIZE = 10
@@ -14,12 +17,14 @@ DARK_FG_HEX = '#20374C'
 
 DEFAULT_PRISONERS_COUNT = 100
 DEFAULT_SIMULATIONS_COUNT = 1000
+MAX_ROWS = 10
+MAX_COLS = 10
 
 class View():
 
   def __init__(self):
     self._listeners: list[UIEventsListener] = []
-    self.root = ttk.Window(title="The 100 Prisoners", themename="superhero", size=(1200,600), iconphoto='./src/images/prison.png')
+    self.root = ttk.Window(title="The 100 Prisoners", themename="superhero", size=(DEFAULT_SCREEN_WIDTH, DEFAULT_SCREEN_HEIGHT), iconphoto='./src/images/prison.png')
     self.root.style.configure('TCheckbutton', background=LIGHT_BG_HEX, foreground=DARK_FG_HEX)
     self.root.style.configure('TScale', background=LIGHT_BG_HEX, thumbcolor=DARK_FG_HEX)
     self.strategySelector = ttk.IntVar(value=-1)
@@ -39,7 +44,7 @@ class View():
     prisoner_data_frame.pack(ipadx=DEFAULT_PADDING)
     ttk.Separator(menu_frame, bootstyle=SECONDARY).pack(pady=DEFAULT_PADDING, fill=X)
     simulation_settings_frame.pack(ipadx=DEFAULT_PADDING)
-    menu_frame.pack(side=LEFT, fill=Y)
+    menu_frame.pack(side=LEFT, fill=Y, padx=DEFAULT_PADDING)
     
   def _drawPrisonersDataFrame(self, parent_frame):
     data_frame = ttk.Frame(parent_frame, bootstyle=LIGHT)
@@ -141,10 +146,22 @@ class View():
     return setting_frame
 
   def _drawBoxMatrix(self):
+    img = PhotoImage(file='./src/images/open-box.png')
     matrix_frame = ttk.Frame(self.root, bootstyle=LIGHT)
-    label = ttk.Label(matrix_frame, text="Simulation viewer", font=(DEFAULT_FONT, DEFAULT_HEADERS_SIZE), bootstyle=(LIGHT, INVERSE))
-    label.pack(pady=DEFAULT_PADDING)
-    matrix_frame.pack(pady=DEFAULT_PADDING)
+    ttk.Label(matrix_frame, text="Simulation viewer", font=(DEFAULT_FONT, DEFAULT_HEADERS_SIZE), bootstyle=(LIGHT, INVERSE)).grid(row=0, columnspan=MAX_COLS)
+    box_label, max_prisoners = 1, self.numberOfPrisoners.get()
+    for row in range(1, MAX_ROWS + 1):
+      for col in range(MAX_COLS):
+          if (box_label > max_prisoners):
+            break
+          ttk.Label(matrix_frame, image=img, bootstyle=(LIGHT, INVERSE)).grid(row=row, column=col, padx=DEFAULT_PADDING)
+          ttk.Label(matrix_frame, text=box_label, bootstyle=(SECONDARY, INVERSE)).grid(row=row, column=col, sticky=S)
+          box_label += 1
+          
+    matrix_frame.image = img
+    ttk.Label(matrix_frame, text="Average solution time: ", font=(DEFAULT_FONT, DEFAULT_FONT_SIZE), bootstyle=(LIGHT, INVERSE))\
+      .grid(row=MAX_ROWS + 1, columnspan=MAX_COLS, pady=DEFAULT_PADDING)
+    matrix_frame.pack(padx=DEFAULT_PADDING, pady=DEFAULT_PADDING)
   
   def run(self):
     self._drawMenuDrawer()
