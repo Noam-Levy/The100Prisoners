@@ -1,6 +1,6 @@
 from listener import *
 from model import Model
-from view import View
+from views.view import View
 
 class Controller(UIEventsListener, ModelEventsListener):
     def __init__(self, view: View, model: Model):
