@@ -1,6 +1,5 @@
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
-from tkinter import PhotoImage
 
 from constants import *
 from views.settings import SettingsView
@@ -43,14 +42,14 @@ class View():
     menu_frame.pack(side=LEFT, fill=Y)
     
     # Simulation view
-    self.simulation_view = BoxMatrix(self.root, self.numberOfPrisoners.get())
+    self.simulation_view = BoxMatrix(self.root, self.numberOfPrisoners)
     simulation_view_frame = self.simulation_view.draw()
-    simulation_view_frame.pack(padx=DEFAULT_PADDING, pady=DEFAULT_PADDING)
+    simulation_view_frame.pack(padx=DEFAULT_PADDING, pady=DEFAULT_PADDING, anchor=CENTER)
 
     self.root.mainloop()
 
   def onNumberOfPrisonersChanged(self):
-    self.simulation_view.setNumberOfBoxes(self.numberOfPrisoners.get())
+    self.simulation_view.setNumberOfBoxes()
     self.simulation_view.draw()
  
   def attach(self, listener: UIEventsListener):
