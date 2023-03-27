@@ -59,7 +59,8 @@ class View():
     self._listeners.remove(listener)
 
   def on_start(self):
-    pass
+    for listener in self._listeners:
+      listener.start_simulation(self.strategySelector.get(), self.numberOfSimulations.get(), self.numberOfPrisoners.get())
 
   def on_quit(self):
     self.root.quit()
