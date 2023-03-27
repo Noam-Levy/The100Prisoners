@@ -44,15 +44,15 @@ class SettingsView(Subview):
       self.random_selector = ttk.Checkbutton(self.root,
                                                 text = "select randomly",
                                                 variable=self.strategy,
-                                                onvalue=0,
-                                                offvalue=-1,
+                                                onvalue=RANDOM_STRATEGY,
+                                                offvalue=NO_STRATEGY_SELECTED,
                                                 bootstyle=(SECONDARY, ROUND, TOGGLE),
                                                 style='TCheckbutton')
       self.strategy_selector = ttk.Checkbutton(self.root,
                                                 text = "apply strategy",
                                                 variable=self.strategy,
-                                                onvalue=1,
-                                                offvalue=-1,
+                                                onvalue=OPTIMIZED_STRATEGY,
+                                                offvalue=NO_STRATEGY_SELECTED,
                                                 bootstyle=(SECONDARY, ROUND, TOGGLE),
                                                 style='TCheckbutton')
           
