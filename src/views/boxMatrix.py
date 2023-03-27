@@ -1,10 +1,11 @@
 from math import sqrt
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
-from tkinter import PhotoImage
 
+from tkinter import PhotoImage
 from constants import *
 from views.subview import Subview
+
 
 class BoxMatrix(Subview):
     def __init__(self, parent_frame, numberOfBoxes):
