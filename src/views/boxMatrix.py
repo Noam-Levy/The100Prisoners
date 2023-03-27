@@ -6,7 +6,6 @@ from tkinter import PhotoImage
 from constants import *
 from views.subview import Subview
 
-
 class BoxMatrix(Subview):
     def __init__(self, parent_frame, numberOfBoxes):
         self.root = ttk.Frame(parent_frame, bootstyle=LIGHT)

@@ -3,7 +3,6 @@ from ttkbootstrap.constants import *
 
 from constants import *
 from views.subview import Subview
-
 class SettingsView(Subview):
   def __init__(self, parent_frame, number_of_prisoners, number_of_simulations, strategy, onNumberOfPrisonersChanged):
       self.root = ttk.Frame(parent_frame, bootstyle=LIGHT)
@@ -18,7 +17,7 @@ class SettingsView(Subview):
                                     font=(DEFAULT_FONT, DEFAULT_FONT_SIZE),
                                     bootstyle=(LIGHT, INVERSE))
       self.number_of_simulations_label = ttk.Label(self.root,
-                                              text = self.number_of_prisoners.get(),
+                                              text = self.number_of_simulations.get(),
                                               font=(DEFAULT_FONT, DEFAULT_FONT_SIZE),
                                               bootstyle=(LIGHT, INVERSE))
       # simulation parameters scales

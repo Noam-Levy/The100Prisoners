@@ -52,8 +52,7 @@ class View():
   def onNumberOfPrisonersChanged(self):
     self.simulation_view.setNumberOfBoxes(self.numberOfPrisoners.get())
     self.simulation_view.draw()
-
-    
+ 
   def attach(self, listener: UIEventsListener):
     self._listeners.append(listener)
 
