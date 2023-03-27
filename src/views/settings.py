@@ -3,13 +3,14 @@ from ttkbootstrap.constants import *
 
 from constants import *
 from views.subview import Subview
-
 class SettingsView(Subview):
-  def __init__(self, parent_frame):
+  def __init__(self, parent_frame, number_of_prisoners, number_of_simulations, strategy, onNumberOfPrisonersChanged):
       self.root = ttk.Frame(parent_frame, bootstyle=LIGHT)
-      self.number_of_prisoners = ttk.IntVar(value=DEFAULT_PRISONERS_COUNT)
-      self.number_of_simulations = ttk.IntVar(value=DEFAULT_SIMULATIONS_COUNT)
-      self.strategy = ttk.IntVar(value=-1)
+      self.number_of_prisoners = number_of_prisoners
+      self.number_of_simulations = number_of_simulations
+      self.strategy = strategy
+      self.onNumberOfPrisonersChanged = onNumberOfPrisonersChanged
+
       # scale values labels
       self.number_of_prisoners_label = ttk.Label(self.root,
                                     text = self.number_of_prisoners.get(),
@@ -21,7 +22,7 @@ class SettingsView(Subview):
                                               bootstyle=(LIGHT, INVERSE))
       # simulation parameters scales
       self.number_of_prisoners_scale = ttk.Scale(self.root,
-                                                  from_=10,
+                                                  from_=2,
                                                   to=150,
                                                   variable=self.number_of_prisoners,
                                                   command=self._setNumberOfPrisonersLabel,
@@ -53,6 +54,7 @@ class SettingsView(Subview):
   def _setNumberOfPrisonersLabel(self, value):
     """Setter function for number of prisoners label"""
     self.number_of_prisoners_label.config(text = "{:03.0f}".format(int(float(value))))
+    self.onNumberOfPrisonersChanged()
   
   def _setNumberOfSimulationsLabel(self, value):
     """Setter function for number of simulations label"""

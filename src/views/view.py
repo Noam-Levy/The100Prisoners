@@ -32,7 +32,7 @@ class View():
     self.prisonerData = PrisonerDataView(menu_frame)
     prisoner_data_frame = self.prisonerData.draw()
     
-    self.settings_frame = SettingsView(menu_frame)
+    self.settings_frame = SettingsView(menu_frame, self.numberOfPrisoners, self.numberOfSimulations, self.strategySelector, self.onNumberOfPrisonersChanged)
     simulation_settings_frame = self.settings_frame.draw(self.on_start, self.on_quit)
         
     simulation_statistics_frame.pack()
@@ -43,12 +43,16 @@ class View():
     menu_frame.pack(side=LEFT, fill=Y)
     
     # Simulation view
-    self.simulation_view = BoxMatrix(self.root, self.settings_frame.number_of_prisoners.get())
+    self.simulation_view = BoxMatrix(self.root, self.numberOfPrisoners.get())
     simulation_view_frame = self.simulation_view.draw()
     simulation_view_frame.pack(padx=DEFAULT_PADDING, pady=DEFAULT_PADDING)
 
     self.root.mainloop()
-    
+
+  def onNumberOfPrisonersChanged(self):
+    self.simulation_view.setNumberOfBoxes(self.numberOfPrisoners.get())
+    self.simulation_view.draw()
+ 
   def attach(self, listener: UIEventsListener):
     self._listeners.append(listener)
 
