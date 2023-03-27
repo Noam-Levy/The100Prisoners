@@ -21,11 +21,12 @@ class GuessRandomly(Strategy, ModelEventsListener):
             execute(number_of_prisoners: int, number_of_simulations: int):
                 executes random guessing strategy.
                 returns simulation results:
-                    (number_of_prisoners, number_of_simulations, successes, success_rate)
+                    (number_of_prisoners, number_of_simulations, successes, success_rate, visited_list)
     """
 
     def execute(self, number_of_prisoners, number_of_simulations):
         successes = 0
+        visited_list = {} # saves each prisoner guesses
         for _ in range(number_of_simulations):
             res = number_of_prisoners * [0]
             for prisoner_number in range(number_of_prisoners):
@@ -39,11 +40,12 @@ class GuessRandomly(Strategy, ModelEventsListener):
                     if current_box == prisoner_number: # check if box contains current prisoner number
                         res[prisoner_number] = 1
                         break
+                visited_list[prisoner_number] = visited
             if sum(res) == number_of_prisoners: 
                 successes += 1
         
         success_rate = 100 * (successes / number_of_simulations)
-        return (number_of_prisoners, number_of_simulations, successes, success_rate)
+        return (number_of_prisoners, number_of_simulations, successes, success_rate, visited_list)
 
 class GuessOptimized(Strategy, ModelEventsListener):
     """
@@ -55,11 +57,12 @@ class GuessOptimized(Strategy, ModelEventsListener):
             execute(number_of_prisoners: int, number_of_simulations: int):
                 executes optimized guessing strategy.
                 returns simulation results:
-                    (number_of_prisoners, number_of_simulations, successes, success_rate)
+                    (number_of_prisoners, number_of_simulations, successes, success_rate, visited_list)
     """
 
     def execute(self, number_of_prisoners, number_of_simulations):          
         successes = 0
+        visited_list = {} # saves each prisoner guesses
         for _ in range(number_of_simulations):
             boxes = [i for i in range(number_of_prisoners)] 
             random.shuffle(boxes) # shuffle boxes values
@@ -75,8 +78,9 @@ class GuessOptimized(Strategy, ModelEventsListener):
                         res[prisoner_number] = 1
                         break
                     ticket_number = boxes[ticket_number] # current prisoner picks the box numbered as the current ticket
+                visited_list[prisoner_number] = visited
             if sum(res) == number_of_prisoners:
                 successes += 1
         
         success_rate = 100 * (successes / number_of_simulations)
-        return (number_of_prisoners, number_of_simulations, successes, success_rate)
+        return (number_of_prisoners, number_of_simulations, successes, success_rate, visited_list)
