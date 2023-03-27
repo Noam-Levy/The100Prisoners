@@ -1,6 +1,5 @@
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
-from tkinter import PhotoImage
 
 from constants import *
 from views.settings import SettingsView
