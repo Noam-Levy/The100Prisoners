@@ -86,11 +86,6 @@ class SettingsView(Subview):
     self.strategy.set(-1)
      
   def draw(self, on_start, on_quit):
-    """
-      Draws the settings frame
-      Returns:
-        setting frame  
-    """
     # Header
     ttk.Label(self.root, text = "Settings", font=(DEFAULT_FONT, DEFAULT_HEADERS_SIZE), bootstyle=(LIGHT, INVERSE))\
       .grid(row=0, column=0, columnspan=3, pady=DEFAULT_PADDING)

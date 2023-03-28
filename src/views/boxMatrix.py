@@ -31,14 +31,30 @@ class BoxMatrix(Subview):
       return self.root
     
     def setNumberOfBoxes(self):
+      """
+         Setter function for total number boxes (which is also the total number of prisoners)\n
+         the function determines how many rows and columns should be drawn
+         Returns:
+            None
+      """
       numberOfBoxes = self.numberOfBoxes.get()
       self.rows = min(int(sqrt(numberOfBoxes)), MAX_ROWS)
       cols = (numberOfBoxes // self.rows) if (sqrt(numberOfBoxes)).is_integer() else (numberOfBoxes // self.rows) + 1
       self.cols = min(cols, MAX_COLS)
 
     def setAverageSimulationTime(self, average_time):
+      """
+         Setter function for average solution time label
+         Returns:
+            None
+      """
       self.average_solution_label.config(text = "Average solution time: {:.2f}".format(average_time))
   
     def _clearFrame(self):
-       for widget in self.root.winfo_children():
-          widget.destroy()
+      """
+        Clears all widgets currently packed into the matrix frame
+        Returns:
+          None
+      """
+      for widget in self.root.winfo_children():
+        widget.destroy()

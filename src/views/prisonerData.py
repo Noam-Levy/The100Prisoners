@@ -29,22 +29,47 @@ class PrisonerDataView(Subview):
       return self.root
     
     def setPrisonerNumber(self, number):
-       self.prisoner_number.set(number)
-       self.prisoner_number_label.config(text=f"Prisoner Number: {self.prisoner_number.get()}")
-    
+      """
+         Setter function for prisoner number
+         Returns:
+            None
+      """
+      self.prisoner_number.set(number)
+      self.prisoner_number_label.config(text=f"Prisoner Number: {self.prisoner_number.get()}")
+      
     def setBoxNumber(self, number):
-       self.box_number.set(number)
-       self.box_number_label.config(text=f"Prisoner Number: {self.box_number.get()}")
+      """
+         Setter function for box number
+         Returns:
+            None
+      """
+      self.box_number.set(number)
+      self.box_number_label.config(text=f"Box Number: {self.box_number.get()}")
     
     def setFoundNumber(self, number):
-       self.found_number.set(number)
-       self.found_number_label.config(text=f"Prisoner Number: {self.found_number.get()}")
+      """
+         Setter function for found box ticket number
+         Returns:
+            None
+      """
+      self.found_number.set(number)
+      self.found_number_label.config(text=f"Found Number: {self.found_number.get()}")
     
     def incrementGuessNumber(self):
-       self.total_guesses.set(self.total_guesses.get() + 1)
-       self.guess_number_label.config(text=f"Prisoner Number: {self.total_guesses.get()}")
+      """
+         Setter function for total number of guesses
+         Returns:
+            None
+      """
+      self.total_guesses.set(self.total_guesses.get() + 1)
+      self.guess_number_label.config(text=f"Number of Guesses: {self.total_guesses.get()}")
 
     def resetGuessNumber(self):
-       self.total_guesses.set(1)
-       self.guess_number_label.config(text=f"Prisoner Number: {self.total_guesses.get()}")
-        
+      """
+         Resets total number of guesses to 1
+         Returns:
+            None
+      """
+      self.total_guesses.set(1)
+      self.guess_number_label.config(text=f"Number of Guesses: {self.total_guesses.get()}")
+      
