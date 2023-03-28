@@ -50,9 +50,9 @@ class View():
     menu_frame.pack(side=LEFT, fill=Y)
     
     # Simulation view
-    self.simulation_view = BoxMatrix(self.root, self.numberOfPrisoners.get())
+    self.simulation_view = BoxMatrix(self.root, self.numberOfPrisoners)
     simulation_view_frame = self.simulation_view.draw()
-    simulation_view_frame.pack(padx=DEFAULT_PADDING, pady=DEFAULT_PADDING)
+    simulation_view_frame.pack(padx=DEFAULT_PADDING, pady=DEFAULT_PADDING, anchor=CENTER)
 
     self.root.mainloop()
 
