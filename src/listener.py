@@ -1,7 +1,11 @@
 from abc import abstractmethod
   
 class UIEventsListener():
-   pass
+   @abstractmethod
+   def start_simulation(self, strategy: int, numberOfSimulations: int, numberOfPrisoners: int):
+      raise NotImplementedError()
 
 class ModelEventsListener():
-   pass
+   @abstractmethod
+   def simulation_report(self, report):
+      raise NotImplementedError()
