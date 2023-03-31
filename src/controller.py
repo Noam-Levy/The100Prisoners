@@ -22,7 +22,7 @@ class Controller(UIEventsListener, ModelEventsListener):
         self.model.run()
 
     def simulation_report(self, report):
-        pass
+        self.view.displaySimulationResults(report)
 
 
     

@@ -1,5 +1,7 @@
 import ttkbootstrap as ttk
+from tkinter import messagebox
 from ttkbootstrap.constants import *
+import time
 
 from constants import *
 from views.settings import SettingsView
@@ -22,6 +24,7 @@ class View():
     self.strategySelector = ttk.IntVar(value=NO_STRATEGY_SELECTED)
     self.numberOfPrisoners = ttk.IntVar(value=DEFAULT_PRISONERS_COUNT)
     self.numberOfSimulations = ttk.IntVar(value=MIN_SIMULATIONS_COUNT)
+    self.simulationSpeed = ttk.DoubleVar(value=SIMULATION_SPEED_SLOW)
     self.prisonerData = {}
   
   def run(self):
@@ -39,8 +42,9 @@ class View():
     self.prisonerData = PrisonerDataView(menu_frame)
     prisoner_data_frame = self.prisonerData.draw()
     
-    self.settings_frame = SettingsView(menu_frame, self.numberOfPrisoners, self.numberOfSimulations, self.strategySelector, self.onNumberOfPrisonersChanged)
-    simulation_settings_frame = self.settings_frame.draw(self.on_start, self.on_quit)
+    self.settings_frame = SettingsView(menu_frame, self.numberOfPrisoners, self.numberOfSimulations, self.strategySelector, self.simulationSpeed,
+                                       self.onNumberOfPrisonersChanged, self.on_start, self.on_quit)
+    simulation_settings_frame = self.settings_frame.draw()
         
     simulation_statistics_frame.pack()
     ttk.Separator(menu_frame, bootstyle=SECONDARY).pack(pady=DEFAULT_PADDING, fill=X)
@@ -55,6 +59,38 @@ class View():
     simulation_view_frame.pack(padx=DEFAULT_PADDING, pady=DEFAULT_PADDING, anchor=CENTER)
 
     self.root.mainloop()
+  
+  def displaySimulationResults(self, results):
+    """
+      Handling the display of simulation results
+      Parameters: 
+        results (tuple) - simulation results data (success rate, average solution time, prisoners guesses lists)
+      Returns: None
+    """
+    delay = self.simulationSpeed.get()
+    (success_rate, exec_time, visited_list) = results
+    self.simulation_view.setAverageSimulationTime(exec_time)
+    # self.statistics_frame.showStatistics(self.numberOfPrisoners.get(), self.numberOfSimulations.get(), success_rate)
+    for prisoner_number, guess_list in visited_list.items():
+      self.prisonerData.setPrisonerNumber(prisoner_number + 1)
+      self.prisonerData.resetGuessNumber()
+      l = len(guess_list)
+
+      for index, guess in enumerate(guess_list):
+        # set prisoner data view
+        self.prisonerData.setBoxNumber(guess + 1)
+        if not self.strategySelector.get() == RANDOM_STRATEGY and index < l - 1:
+          self.prisonerData.setFoundNumber(guess_list[index + 1])
+
+        # set box matrix view
+        self.simulation_view.drawVisitingBox(guess)
+        
+        self.root.update()  # force GUI to update
+        time.sleep(delay)  # delay to help user to keep track of the simulation
+        self.prisonerData.incrementGuessNumber()
+      
+      self.simulation_view.resetBoxes()
+    self.settings_frame.enableControls()
 
   def onNumberOfPrisonersChanged(self):
     """
@@ -90,8 +126,13 @@ class View():
       Returns:
         None
     """
+    self.settings_frame.disableControls()
     for listener in self._listeners:
-      listener.start_simulation(self.strategySelector.get(), self.numberOfSimulations.get(), self.numberOfPrisoners.get())
+      try:
+        listener.start_simulation(self.strategySelector.get(), self.numberOfSimulations.get(), self.numberOfPrisoners.get())
+      except ValueError as e:
+        self.settings_frame.enableControls()
+        messagebox.showerror("Error", e.args[0])
 
   def on_quit(self):
     """

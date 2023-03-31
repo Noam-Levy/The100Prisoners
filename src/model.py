@@ -18,6 +18,7 @@ class Model():
       """
       self._observers: list[ModelEventsListener] = []
       self.executer = concurrent.futures.ThreadPoolExecutor(max_workers=DEFAULT_WORKER_THREADS)
+      self.results = None
       self.setNumberOfPrisoners(number_of_prisoners)
       self.setNumberOfSimulations(simulations)
       self.strategy = strategy
@@ -61,7 +62,6 @@ class Model():
   def run(self):
     """
       executes simulations implementing selected prisoners strategy.\n
-      the method will report the results to the model's observers\n
       Returns:
         None
     """
@@ -74,21 +74,21 @@ class Model():
     for future in concurrent.futures.as_completed(futures):
         data = future.result() #  (success: bool, execution_time: float visited_list: dict)
         exec_times += data[1]
-        if data[0]: 
+        if data[0]: # checks if prisoners were successful in current simulation run
             total_successes += 1
 
     success_rate = (100 * (total_successes / self.simulations))
     average_sol_time = exec_times / self.simulations
     data_to_sim_view = futures[0].result()[2] # extract first simulation visited_list to be displayed in view.
-    results = (success_rate, average_sol_time, data_to_sim_view)
-    for observer in self._observers:
-        observer.simulation_report(results)
+    self.results = (success_rate, average_sol_time, data_to_sim_view)
+    self._reportResults()
 
   def attach(self, observer: ModelEventsListener):
       self._observers.append(observer)
     
   def detach(self, observer: ModelEventsListener):
       self._observers.remove(observer)
-
-
-    
+  
+  def _reportResults(self):
+      for observer in self._observers:
+          observer.simulation_report(self.results)

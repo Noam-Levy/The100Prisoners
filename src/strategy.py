@@ -41,7 +41,7 @@ class GuessRandomly(Strategy, ModelEventsListener):
                 if current_box == prisoner_number: # check if box contains current prisoner number
                     res[prisoner_number] = 1
                     break
-            visited_list[prisoner_number] = visited
+            visited_list[prisoner_number] = list(visited)
         
         execution_time = timeit.default_timer() - t1
         success = sum(res) == number_of_prisoners
@@ -76,7 +76,7 @@ class GuessOptimized(Strategy, ModelEventsListener):
                     res[prisoner_number] = 1
                     break
                 ticket_number = boxes[ticket_number] # current prisoner picks the box numbered as the current ticket
-            visited_list[prisoner_number] = visited
+            visited_list[prisoner_number] = list(visited)
         
         execution_time = timeit.default_timer() - t1
         success = sum(res) == number_of_prisoners
