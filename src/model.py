@@ -72,16 +72,15 @@ class Model():
     exec_times = 0
     futures = [self.executer.submit(self.strategy.execute, self.number_of_prisoners) for _ in range(self.simulations)]
     for future in concurrent.futures.as_completed(futures):
-        data = future.result() #  (success: bool, execution_time: float visited_list: dict)
-        exec_times += data[1]
-        if data[0]: # checks if prisoners were successful in current simulation run
+        success, exec_time, _ = future.result() # (success: bool, execution_time: float visited_list: dict)
+        exec_times += exec_time
+        if success:  # checks if prisoners were successful in current simulation run
             total_successes += 1
 
     success_rate = (100 * (total_successes / self.simulations))
     average_sol_time = exec_times / self.simulations
     data_to_sim_view = futures[0].result()[2] # extract first simulation visited_list to be displayed in view.
     self.results = (success_rate, average_sol_time, data_to_sim_view)
-    self._reportResults()
 
   def attach(self, observer: ModelEventsListener):
       self._observers.append(observer)
