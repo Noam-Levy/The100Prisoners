@@ -10,6 +10,7 @@ class Controller(UIEventsListener, ModelEventsListener):
         self.view = view
         self.model.attach(self)
         self.view.attach(self)
+        self.view.run()
     
     def start_simulation(self, strategy: int, numberOfSimulations: int, numberOfPrisoners: int):
         if strategy == -1:
@@ -21,7 +22,7 @@ class Controller(UIEventsListener, ModelEventsListener):
         self.model.run()
 
     def simulation_report(self, report):
-        pass
+        self.view.displaySimulationResults(report)
 
 
     
