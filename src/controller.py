@@ -20,6 +20,7 @@ class Controller(UIEventsListener, ModelEventsListener):
         self.model.setNumberOfSimulations(numberOfSimulations)
         self.model.setStrategy(GuessRandomly() if strategy == 0 else GuessOptimized())
         self.model.run()
+        self.simulation_report(self.model.results)
 
     def simulation_report(self, report):
         self.view.displaySimulationResults(report)
