@@ -134,7 +134,6 @@ class View():
       except ValueError as e:
         self.settings_frame.enableControls()
         self.settings_frame.setErrorMessage(e.args[0])
-        # messagebox.showerror("Error", e.args[0])
 
   def on_quit(self):
     """
