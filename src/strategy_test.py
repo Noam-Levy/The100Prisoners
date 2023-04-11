@@ -3,8 +3,8 @@ from strategy import *
 
 class TestStrategy:
     @pytest.mark.parametrize("strategy, success_rate, tolerance", [
-        (GuessRandomly(), 0.0, 0.1),
-        (GuessOptimized(), 0.31, 1),
+        (GuessRandomly(), 0.0, 0.01),
+        (GuessOptimized(), 0.31, 0.01),
     ])
     def test_success_rate(self, strategy, success_rate, tolerance):
         successes = 0
