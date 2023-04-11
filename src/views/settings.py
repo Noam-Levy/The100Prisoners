@@ -89,6 +89,15 @@ class SettingsView(Subview):
     """
     self.number_of_simulations_label.config(text = "{:04.0f}".format(int(float(value))))
   
+  def setErrorMessage(self, value=""):
+    """
+      setter for error message
+      Returns:
+        None
+    """
+    self.errorMessage.config(text=value)
+
+  
   def _on_reset(self):
     """
       Setter function for resetting simulation settings
@@ -102,14 +111,14 @@ class SettingsView(Subview):
     self.strategy.set(-1)
 
   def disableControls(self):
-    self.start_button.config(state="disabled")
-    self.reset_button.config(state="disabled")
-    self.quit_button.config(state="disabled")
+    self.start_button.grid_remove()
+    self.reset_button.grid_remove()
+    self.quit_button.grid_remove()
 
   def enableControls(self):
-    self.start_button.config(state="enabled")
-    self.reset_button.config(state="enabled")
-    self.quit_button.config(state="enabled")
+    self.start_button.grid()
+    self.reset_button.grid()
+    self.quit_button.grid()
      
   def draw(self):
     # Header
@@ -143,5 +152,12 @@ class SettingsView(Subview):
     self.start_button.grid(row=6, column=0, pady=DEFAULT_PADDING)
     self.reset_button.grid(row=6, column=1, pady=DEFAULT_PADDING)
     self.quit_button.grid(row=6, column=2, pady=DEFAULT_PADDING, padx=DEFAULT_PADDING)
+    
+    # error message
+    self.errorMessage = ttk.Label(self.root,
+              text = "",
+              font=(DEFAULT_FONT, DEFAULT_SUBHEADERS_SIZE), foreground= 'red',
+              bootstyle=(LIGHT, INVERSE))
+    self.errorMessage.grid(row=7, column=0, columnspan=3)
 
     return self.root
