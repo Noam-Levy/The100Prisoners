@@ -11,7 +11,7 @@ class SettingsView(Subview):
                strategy: ttk.IntVar,
                simulation_speed: ttk.DoubleVar,
                onNumberOfPrisonersChanged: Callable,
-               on_start: Callable, on_quit: Callable):
+               on_start: Callable, on_quit: Callable, displaySimulationResults: Callable):
       
       self.root = ttk.Frame(parent_frame, bootstyle=LIGHT)
       self.number_of_prisoners = number_of_prisoners
@@ -71,7 +71,8 @@ class SettingsView(Subview):
       self.start_button = ttk.Button(self.root, text = "Start", bootstyle=SUCCESS, command=on_start)
       self.reset_button = ttk.Button(self.root, text = "Reset", bootstyle=SECONDARY, command=self._on_reset)
       self.quit_button = ttk.Button(self.root, text = "Quit", bootstyle=DANGER, command=on_quit)
-          
+      self.next_button = ttk.Button(self.root, text = "Next", bootstyle=INFO, command=on_quit)
+    
   def _onNumberOfPrisonersChange(self, value):
     """
       Listener for number of prisoners value change
@@ -102,14 +103,16 @@ class SettingsView(Subview):
     self.strategy.set(-1)
 
   def disableControls(self):
-    self.start_button.config(state="disabled")
-    self.reset_button.config(state="disabled")
-    self.quit_button.config(state="disabled")
+    self.start_button.grid_remove()
+    self.reset_button.grid_remove()
+    self.quit_button.grid_remove()
+    self.next_button.grid(row=6, column=1, pady=DEFAULT_PADDING)
 
   def enableControls(self):
-    self.start_button.config(state="enabled")
-    self.reset_button.config(state="enabled")
-    self.quit_button.config(state="enabled")
+    self.start_button.grid()
+    self.reset_button.grid()
+    self.quit_button.grid()
+    self.next_button.grid_remove()
      
   def draw(self):
     # Header

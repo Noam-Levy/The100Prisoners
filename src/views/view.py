@@ -126,13 +126,14 @@ class View():
       Returns:
         None
     """
+    self.settings_frame.setErrorMessage()
     self.settings_frame.disableControls()
     for listener in self._listeners:
       try:
         listener.start_simulation(self.strategySelector.get(), self.numberOfSimulations.get(), self.numberOfPrisoners.get())
       except ValueError as e:
         self.settings_frame.enableControls()
-        messagebox.showerror("Error", e.args[0])
+        self.settings_frame.setErrorMessage(e.args[0])
 
   def on_quit(self):
     """
