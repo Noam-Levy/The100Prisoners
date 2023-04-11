@@ -71,7 +71,6 @@ class SettingsView(Subview):
       self.start_button = ttk.Button(self.root, text = "Start", bootstyle=SUCCESS, command=on_start)
       self.reset_button = ttk.Button(self.root, text = "Reset", bootstyle=SECONDARY, command=self._on_reset)
       self.quit_button = ttk.Button(self.root, text = "Quit", bootstyle=DANGER, command=on_quit)
-      self.pause_button = ttk.Button(self.root, text = "Pause", bootstyle=SECONDARY, command=on_quit)
           
   def _onNumberOfPrisonersChange(self, value):
     """
@@ -92,7 +91,7 @@ class SettingsView(Subview):
   
   def setErrorMessage(self, value=""):
     """
-      Listener for error message
+      setter for error message
       Returns:
         None
     """
@@ -115,13 +114,11 @@ class SettingsView(Subview):
     self.start_button.grid_remove()
     self.reset_button.grid_remove()
     self.quit_button.grid_remove()
-    self.pause_button.grid(row=6, column=1, pady=DEFAULT_PADDING)
 
   def enableControls(self):
     self.start_button.grid()
     self.reset_button.grid()
     self.quit_button.grid()
-    self.pause_button.grid_remove()
      
   def draw(self):
     # Header
