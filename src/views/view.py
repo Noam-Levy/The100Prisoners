@@ -68,10 +68,9 @@ class View():
       Returns: None
     """
     delay = self.simulationSpeed.get()
-    (success_rate, exec_time, visited_list) = results
+    _, exec_time, visited_list = results
     self.simulation_view.setAverageSimulationTime(exec_time)
-    # self.statistics_frame.showStatistics(self.numberOfPrisoners.get(), self.numberOfSimulations.get(), success_rate)
-    for prisoner_number, guess_list in visited_list.items():
+    for prisoner_number, guess_list in visited_list[0].items():
       self.prisonerData.setPrisonerNumber(prisoner_number + 1)
       self.prisonerData.resetGuessNumber()
       l = len(guess_list)
@@ -88,9 +87,18 @@ class View():
         self.root.update()  # force GUI to update
         time.sleep(delay)  # delay to help user to keep track of the simulation
         self.prisonerData.incrementGuessNumber()
-      
       self.simulation_view.resetBoxes()
+      
     self.settings_frame.enableControls()
+
+  def displayStatistics(self, results):
+    """
+      Handling the display of the statistical calculations
+      Parameters: 
+        results (dict) - statistical calculations data (population size: success %)
+      Returns: None
+    """
+    self.statistics_frame.showStatistics(results)
 
   def onNumberOfPrisonersChanged(self):
     """
@@ -126,13 +134,14 @@ class View():
       Returns:
         None
     """
+    self.settings_frame.setErrorMessage()
     self.settings_frame.disableControls()
     for listener in self._listeners:
       try:
         listener.start_simulation(self.strategySelector.get(), self.numberOfSimulations.get(), self.numberOfPrisoners.get())
       except ValueError as e:
         self.settings_frame.enableControls()
-        messagebox.showerror("Error", e.args[0])
+        self.settings_frame.setErrorMessage(e.args[0])
 
   def on_quit(self):
     """
