@@ -71,7 +71,7 @@ class SettingsView(Subview):
       self.start_button = ttk.Button(self.root, text = "Start", bootstyle=SUCCESS, command=on_start)
       self.reset_button = ttk.Button(self.root, text = "Reset", bootstyle=SECONDARY, command=self._on_reset)
       self.quit_button = ttk.Button(self.root, text = "Quit", bootstyle=DANGER, command=on_quit)
-      self.next_button = ttk.Button(self.root, text = "Next", bootstyle=INFO, command=on_quit)
+      self.next_button = ttk.Button(self.root, text = "Next", bootstyle=INFO, command=displaySimulationResults)
     
   def _onNumberOfPrisonersChange(self, value):
     """

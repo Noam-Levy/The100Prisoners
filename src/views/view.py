@@ -43,7 +43,7 @@ class View():
     prisoner_data_frame = self.prisonerData.draw()
     
     self.settings_frame = SettingsView(menu_frame, self.numberOfPrisoners, self.numberOfSimulations, self.strategySelector, self.simulationSpeed,
-                                       self.onNumberOfPrisonersChanged, self.on_start, self.on_quit)
+                                       self.onNumberOfPrisonersChanged, self.on_start, self.on_quit, self.displaySimulationResults)
     simulation_settings_frame = self.settings_frame.draw()
         
     simulation_statistics_frame.pack()
@@ -75,8 +75,9 @@ class View():
       self.prisonerData.setPrisonerNumber(prisoner_number + 1)
       self.prisonerData.resetGuessNumber()
       l = len(guess_list)
-
+      guess_generator = self.next_guess(guess_list)  # initialize the generator
       for index, guess in enumerate(guess_list):
+        guess = next(guess_generator)
         # set prisoner data view
         self.prisonerData.setBoxNumber(guess + 1)
         if not self.strategySelector.get() == RANDOM_STRATEGY and index < l - 1:
@@ -119,6 +120,29 @@ class View():
       self._listeners.remove(listener)
     except:
       return
+    
+  def next_guess(guess_list):
+    for guess in guess_list:
+        yield guess
+  
+  def displayNextGuess(self, generator):
+    """
+      Handles the display of the next guess in the simulation
+      Parameters: 
+        generator (generator) - a generator that yields the next guess
+      Returns: None
+    """
+    try:
+        guess = next(generator)
+        # set prisoner data view
+        self.prisonerData.setBoxNumber(guess + 1)
+
+        # set box matrix view
+        self.simulation_view.drawVisitingBox(guess)
+
+        self.root.update()  # force GUI to update
+    except StopIteration:
+        pass
 
   def on_start(self):
     """
