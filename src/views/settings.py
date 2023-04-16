@@ -11,7 +11,7 @@ class SettingsView(Subview):
                strategy: ttk.IntVar,
                simulation_speed: ttk.DoubleVar,
                onNumberOfPrisonersChanged: Callable,
-               on_start: Callable, on_quit: Callable, displaySimulationResults: Callable):
+               on_start: Callable, on_quit: Callable, on_next: Callable):
       
       self.root = ttk.Frame(parent_frame, bootstyle=LIGHT)
       self.number_of_prisoners = number_of_prisoners
@@ -71,7 +71,7 @@ class SettingsView(Subview):
       self.start_button = ttk.Button(self.root, text = "Start", bootstyle=SUCCESS, command=on_start)
       self.reset_button = ttk.Button(self.root, text = "Reset", bootstyle=SECONDARY, command=self._on_reset)
       self.quit_button = ttk.Button(self.root, text = "Quit", bootstyle=DANGER, command=on_quit)
-      self.next_button = ttk.Button(self.root, text = "Next", bootstyle=INFO, command=displaySimulationResults)
+      self.next_button = ttk.Button(self.root, text = "Next", bootstyle=INFO, command=on_next)
     
   def _onNumberOfPrisonersChange(self, value):
     """
@@ -89,6 +89,15 @@ class SettingsView(Subview):
         None
     """
     self.number_of_simulations_label.config(text = "{:04.0f}".format(int(float(value))))
+  
+  def setErrorMessage(self, value=""):
+    """
+      setter for error message
+      Returns:
+        None
+    """
+    self.errorMessage.config(text=value)
+
   
   def _on_reset(self):
     """
@@ -146,5 +155,12 @@ class SettingsView(Subview):
     self.start_button.grid(row=6, column=0, pady=DEFAULT_PADDING)
     self.reset_button.grid(row=6, column=1, pady=DEFAULT_PADDING)
     self.quit_button.grid(row=6, column=2, pady=DEFAULT_PADDING, padx=DEFAULT_PADDING)
+    
+    # error message
+    self.errorMessage = ttk.Label(self.root,
+              text = "",
+              font=(DEFAULT_FONT, DEFAULT_SUBHEADERS_SIZE), foreground= 'red',
+              bootstyle=(LIGHT, INVERSE))
+    self.errorMessage.grid(row=7, column=0, columnspan=3)
 
     return self.root

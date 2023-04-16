@@ -19,6 +19,7 @@ class Model():
       self._observers: list[ModelEventsListener] = []
       self.executer = concurrent.futures.ThreadPoolExecutor(max_workers=DEFAULT_WORKER_THREADS)
       self.results = None
+      self.statisticsData = None
       self.setNumberOfPrisoners(number_of_prisoners)
       self.setNumberOfSimulations(simulations)
       self.strategy = strategy
@@ -68,26 +69,47 @@ class Model():
     if not self.strategy:
         raise ValueError("Strategy was not defined")
     
+    sim_data = []
     total_successes = 0
-    exec_times = 0
+    total_exec_time = 0
+    self.executer.submit(self._statisticsCreator) # assign one thread to create simulation statistics
     futures = [self.executer.submit(self.strategy.execute, self.number_of_prisoners) for _ in range(self.simulations)]
     for future in concurrent.futures.as_completed(futures):
-        success, exec_time, _ = future.result() # (success: bool, execution_time: float visited_list: dict)
-        exec_times += exec_time
+        success, exec_time, visited_list = future.result() # (success: bool, execution_time: float visited_list: dict)
+        total_exec_time += exec_time
+        sim_data.append(visited_list)
         if success:  # checks if prisoners were successful in current simulation run
             total_successes += 1
 
     success_rate = (100 * (total_successes / self.simulations))
-    average_sol_time = exec_times / self.simulations
-    data_to_sim_view = futures[0].result()[2] # extract first simulation visited_list to be displayed in view.
-    self.results = (success_rate, average_sol_time, data_to_sim_view)
+    average_sol_time = total_exec_time / self.simulations
+    self.results = (success_rate, average_sol_time, sim_data)
+    self._reportResults()
 
   def attach(self, observer: ModelEventsListener):
       self._observers.append(observer)
     
   def detach(self, observer: ModelEventsListener):
       self._observers.remove(observer)
-  
+
+  def _statisticsCreator(self):
+    populations = list(filter(lambda x: x <= self.number_of_prisoners, [10, 25, 50, 100, 150]))
+    interpolated_data = {}
+    for pop in populations:
+      results = [self.strategy.execute(pop) for _ in range(self.simulations)]
+      total_successes = 0
+      for result in results:
+         if result[0]: # result = (success: bool, execution_time: float visited_list: dict)
+            total_successes += 1
+      
+      interpolated_data[pop] = 100 * (total_successes / self.simulations)    
+      
+    self.statisticsData = interpolated_data
+ 
   def _reportResults(self):
-      for observer in self._observers:
-          observer.simulation_report(self.results)
+    while not (self.statisticsData and self.results): # wait for both statistics and simulation results
+       pass
+    
+    for observer in self._observers:
+        observer.statistics_report(self.statisticsData)
+        # observer.simulation_report(self.results)

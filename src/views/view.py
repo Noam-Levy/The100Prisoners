@@ -43,7 +43,7 @@ class View():
     prisoner_data_frame = self.prisonerData.draw()
     
     self.settings_frame = SettingsView(menu_frame, self.numberOfPrisoners, self.numberOfSimulations, self.strategySelector, self.simulationSpeed,
-                                       self.onNumberOfPrisonersChanged, self.on_start, self.on_quit, self.displaySimulationResults)
+                                       self.onNumberOfPrisonersChanged, self.on_start, self.on_quit, self.on_next)
     simulation_settings_frame = self.settings_frame.draw()
         
     simulation_statistics_frame.pack()
@@ -68,16 +68,13 @@ class View():
       Returns: None
     """
     delay = self.simulationSpeed.get()
-    (success_rate, exec_time, visited_list) = results
+    _, exec_time, visited_list = results
     self.simulation_view.setAverageSimulationTime(exec_time)
-    # self.statistics_frame.showStatistics(self.numberOfPrisoners.get(), self.numberOfSimulations.get(), success_rate)
-    for prisoner_number, guess_list in visited_list.items():
+    for prisoner_number, guess_list in visited_list[0].items():
       self.prisonerData.setPrisonerNumber(prisoner_number + 1)
       self.prisonerData.resetGuessNumber()
       l = len(guess_list)
-      guess_generator = self.next_guess(guess_list)  # initialize the generator
       for index, guess in enumerate(guess_list):
-        guess = next(guess_generator)
         # set prisoner data view
         self.prisonerData.setBoxNumber(guess + 1)
         if not self.strategySelector.get() == RANDOM_STRATEGY and index < l - 1:
@@ -89,9 +86,18 @@ class View():
         self.root.update()  # force GUI to update
         time.sleep(delay)  # delay to help user to keep track of the simulation
         self.prisonerData.incrementGuessNumber()
-      
       self.simulation_view.resetBoxes()
+      
     self.settings_frame.enableControls()
+
+  def displayStatistics(self, results):
+    """
+      Handling the display of the statistical calculations
+      Parameters: 
+        results (dict) - statistical calculations data (population size: success %)
+      Returns: None
+    """
+    self.statistics_frame.showStatistics(results)
 
   def onNumberOfPrisonersChanged(self):
     """
@@ -120,10 +126,6 @@ class View():
       self._listeners.remove(listener)
     except:
       return
-    
-  def next_guess(guess_list):
-    for guess in guess_list:
-        yield guess
   
   def displayNextGuess(self, generator):
     """
@@ -158,6 +160,23 @@ class View():
       except ValueError as e:
         self.settings_frame.enableControls()
         self.settings_frame.setErrorMessage(e.args[0])
+
+  def on_next(self):
+    for listener in self._listeners:
+      try:
+        next_guess = listener.fetch_next_guess(0,1)
+        print(next_guess)
+        # set prisoner data view
+        self.prisonerData.setBoxNumber(next_guess + 1)
+        # if not self.strategySelector.get() == RANDOM_STRATEGY:
+        #   self.prisonerData.setFoundNumber(guess_list[index + 1])
+
+        # set box matrix view
+        self.simulation_view.drawVisitingBox(next_guess)
+        
+        self.root.update()  # force GUI to update
+      except StopIteration:
+        pass 
 
   def on_quit(self):
     """

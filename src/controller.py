@@ -8,6 +8,9 @@ class Controller(UIEventsListener, ModelEventsListener):
     def __init__(self, view: View, model: Model):
         self.model = model
         self.view = view
+        self.reqSimulationNumber = -1
+        self.reqPrisonerNumber = -1
+        self._req_guess_list = None
         self.model.attach(self)
         self.view.attach(self)
         self.view.run()
@@ -20,10 +23,24 @@ class Controller(UIEventsListener, ModelEventsListener):
         self.model.setNumberOfSimulations(numberOfSimulations)
         self.model.setStrategy(GuessRandomly() if strategy == 0 else GuessOptimized())
         self.model.run()
-        self.simulation_report(self.model.results)
+
+    def statistics_report(self, report):
+        self.view.displayStatistics(report)
 
     def simulation_report(self, report):
         self.view.displaySimulationResults(report)
+    
+    def fetch_next_guess(self, simulationNumber: int, prisonerNumber: int):
+        def next_guess(guess_list):
+            for guess in guess_list:
+                yield guess
+        
+        #TODO check the simulation and prisoner number
+
+        if self.reqPrisonerNumber != prisonerNumber or self.reqSimulationNumber != simulationNumber:
+            self._req_guess_list = self.model.results[2][simulationNumber][prisonerNumber]
+
+        return next_guess(self._req_guess_list).__next__()
 
 
     
