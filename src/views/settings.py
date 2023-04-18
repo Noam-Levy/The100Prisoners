@@ -67,7 +67,7 @@ class SettingsView(Subview):
                                                bootstyle=(
                                                    SECONDARY, ROUND, TOGGLE),
                                                style='TCheckbutton')
-      
+      # buttons
       self.start_button = ttk.Button(self.root, text = "Start", bootstyle=SUCCESS, command=on_start)
       self.reset_button = ttk.Button(self.root, text = "Reset", bootstyle=SECONDARY, command=self._on_reset)
       self.quit_button = ttk.Button(self.root, text = "Quit", bootstyle=DANGER, command=on_quit)
@@ -89,6 +89,26 @@ class SettingsView(Subview):
         None
     """
     self.number_of_simulations_label.config(text = "{:04.0f}".format(int(float(value))))
+
+  def _validate_simulation_number(self, simulation_number):
+    """
+      Validates the selected simulation number
+    """
+    if simulation_number == "":
+      return True
+    
+    res = simulation_number.isdigit() and (MIN_SIMULATIONS_COUNT <= int(simulation_number) <= self.number_of_simulations.get())
+    return res 
+
+  def _validate_prisoner_number(self, prisoner_number):
+    """
+      Validates the selected prisoner number
+    """
+    if prisoner_number == "":
+      return True
+
+    res = prisoner_number.isdigit() and (MIN_PRISONER_COUNT <= int(prisoner_number) <= self.number_of_prisoners.get())
+    return res
   
   def setErrorMessage(self, value=""):
     """
@@ -112,15 +132,35 @@ class SettingsView(Subview):
     self.strategy.set(-1)
 
   def disableControls(self):
+    """
+      Removes basic controls from view and adds simulation controls into view
+    """
     self.start_button.grid_remove()
     self.reset_button.grid_remove()
     self.quit_button.grid_remove()
-    self.next_button.grid(row=6, column=1, pady=DEFAULT_PADDING)
+    
+    self.sim_num_label.grid(row=5, column=0, padx=DEFAULT_PADDING)
+    self.sim_entry.grid(row=5, column=1, sticky=W, pady=DEFAULT_PADDING)
+    
+    self.pris_num_label.grid(row=6, column=0, padx=DEFAULT_PADDING)
+    self.pris_entry.grid(row=6, column=1, sticky=W, pady=DEFAULT_PADDING)
+    
+    self.next_button.grid(row=8, column=1, pady=DEFAULT_PADDING)
 
   def enableControls(self):
+    """
+      Adds basic controls into view and removes simulation controls from view
+    """
     self.start_button.grid()
     self.reset_button.grid()
     self.quit_button.grid()
+
+    self.sim_num_label.grid_remove()
+    self.sim_entry.grid_remove()
+    
+    self.pris_num_label.grid_remove()
+    self.pris_entry.grid_remove()
+    
     self.next_button.grid_remove()
      
   def draw(self):
@@ -145,18 +185,33 @@ class SettingsView(Subview):
     self.number_of_simulations_scale.grid(row=2, column=1, padx=DEFAULT_PADDING)
     self.number_of_simulations_label.grid(row=2, column=2, padx=DEFAULT_PADDING)
 
-    #Strategy check buttons
+    # Strategy check buttons
     self.random_selector.grid(row=3, column=1, sticky=W, pady=DEFAULT_PADDING)
     self.strategy_selector.grid(row=4, column=1, sticky=W, pady=DEFAULT_PADDING)
 
-    # speed selector
-    self.speed_selector.grid(row=5, column=1, sticky=W, pady=DEFAULT_PADDING)
+    # Simulation number and prisoner number entries
+    sim_val_func = self.root.register(self._validate_simulation_number)
+    pris_val_func = self.root.register(self._validate_prisoner_number)
 
-    self.start_button.grid(row=6, column=0, pady=DEFAULT_PADDING)
-    self.reset_button.grid(row=6, column=1, pady=DEFAULT_PADDING)
-    self.quit_button.grid(row=6, column=2, pady=DEFAULT_PADDING, padx=DEFAULT_PADDING)
+    self.sim_num_label = ttk.Label(self.root,
+              text="Simulation number",
+              font=(DEFAULT_FONT, DEFAULT_FONT_SIZE),
+              bootstyle=(LIGHT, INVERSE))
+    self.sim_entry = ttk.Entry(self.root, validate="focusout", validatecommand=(sim_val_func, '%P'))
+
+
+    self.pris_num_label = ttk.Label(self.root,
+              text="Prisoner number",
+              font=(DEFAULT_FONT, DEFAULT_FONT_SIZE),
+              bootstyle=(LIGHT, INVERSE))
+    self.pris_entry = ttk.Entry(self.root, validate="focusout", validatecommand=(pris_val_func, '%P'))
+
+    # Control buttons
+    self.start_button.grid(row=8, column=0, pady=DEFAULT_PADDING)
+    self.reset_button.grid(row=8, column=1, pady=DEFAULT_PADDING)
+    self.quit_button.grid(row=8, column=2, pady=DEFAULT_PADDING, padx=DEFAULT_PADDING)
     
-    # error message
+    # Error message
     self.errorMessage = ttk.Label(self.root,
               text = "",
               font=(DEFAULT_FONT, DEFAULT_SUBHEADERS_SIZE), foreground= 'red',
