@@ -10,6 +10,7 @@ class Controller(UIEventsListener, ModelEventsListener):
         self.view = view
         self.reqSimulationNumber = -1
         self.reqPrisonerNumber = -1
+        # self._req_guess_generator = None
         self._req_guess_list = None
         self.model.attach(self)
         self.view.attach(self)
@@ -31,16 +32,13 @@ class Controller(UIEventsListener, ModelEventsListener):
         self.view.displaySimulationResults(report)
     
     def fetch_next_guess(self, simulationNumber: int, prisonerNumber: int):
-        def next_guess(guess_list):
-            for guess in guess_list:
-                yield guess
-        
-        #TODO check the simulation and prisoner number
-
+        print(prisonerNumber)
         if self.reqPrisonerNumber != prisonerNumber or self.reqSimulationNumber != simulationNumber:
             self._req_guess_list = self.model.results[2][simulationNumber][prisonerNumber]
+            self.reqPrisonerNumber = prisonerNumber
+            self.reqSimulationNumber = simulationNumber
 
-        return next_guess(self._req_guess_list).__next__()
-
+        guess = self._req_guess_list.pop(0)
+        return guess
 
     
