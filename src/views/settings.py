@@ -97,7 +97,7 @@ class SettingsView(Subview):
     if simulation_number == "":
       return True
     
-    res = simulation_number.isdigit() and (MIN_SIMULATIONS_COUNT <= int(simulation_number) <= self.number_of_simulations.get())
+    res = simulation_number.isdigit() and (1 <= int(simulation_number) <= self.number_of_simulations.get())
     return res 
 
   def _validate_prisoner_number(self, prisoner_number):
@@ -107,7 +107,7 @@ class SettingsView(Subview):
     if prisoner_number == "":
       return True
 
-    res = prisoner_number.isdigit() and (MIN_PRISONER_COUNT <= int(prisoner_number) <= self.number_of_prisoners.get())
+    res = prisoner_number.isdigit() and (1 <= int(prisoner_number) <= self.number_of_prisoners.get())
     return res
   
   def setErrorMessage(self, value=""):
