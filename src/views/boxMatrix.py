@@ -9,7 +9,7 @@ from views.subview import Subview
 class BoxMatrix(Subview):
     def __init__(self, parent_frame, numberOfBoxes: ttk.IntVar):
         self.root = ttk.Frame(parent_frame, bootstyle=LIGHT)
-        self.box_list = {} # hashes box labels for easy access to change state {box_number: ttk.label} 
+        self.box_list = {} # hashes box labels for easy access to change state {box_number: (row, col, box_label, ticket_label)} 
         self.last_visited = -1 # keeps track of last visited box
         self.unvisited_box = PhotoImage(file='./src/images/unvisited-box.png')
         self.visited_box = PhotoImage(file='./src/images/visited-box.png')
@@ -26,8 +26,9 @@ class BoxMatrix(Subview):
         for col in range(self.cols):
           if (box_number <= numberOfBoxes):
             box_label = ttk.Label(self.root, image=self.unvisited_box, bootstyle=(LIGHT, INVERSE))
-            self.box_list[box_number - 1] = box_label # adds box label to the map in a zero based numbering
-            box_label.grid(row=row, column=col, padx=DEFAULT_PADDING)
+            ticket_label = ttk.Label(self.root, text="", font=(DEFAULT_FONT, DEFAULT_SUBHEADERS_SIZE), bootstyle=(SECONDARY, INVERSE))
+            self.box_list[box_number - 1] = (row, col, box_label, ticket_label) # add box label and ticket label to the map in a zero based numbering
+            box_label.grid(row=row, column=col, padx=DEFAULT_PADDING, pady=DEFAULT_PADDING)
             ttk.Label(self.root, text=box_number, bootstyle=(SECONDARY, INVERSE)).grid(row=row, column=col, sticky=S)
           box_number += 1
           
@@ -53,7 +54,7 @@ class BoxMatrix(Subview):
          Returns:
             None
       """
-      self.average_solution_label.config(text = "Average solution time: {:.5f} seconds".format(average_time))
+      self.average_solution_label.config(text = "Average solution time: {:.04f} seconds".format(average_time))
 
     def drawVisitingBox(self, box_number):
       """
@@ -67,9 +68,13 @@ class BoxMatrix(Subview):
         return
       
       if self.last_visited >= 0:
-        self.box_list[self.last_visited].config(image=self.visited_box)
+        row, col, box_label, ticket_label = self.box_list[self.last_visited]
+        box_label.config(image=self.visited_box)
+        ticket_label.config(text=(box_number+1))
+        ticket_label.grid(row=row, column=col)
+       
       self.last_visited = box_number
-      self.box_list[box_number].config(image=self.visiting_box)
+      self.box_list[box_number][2].config(image=self.visiting_box)
 
     def resetBoxes(self):
       """
@@ -78,8 +83,9 @@ class BoxMatrix(Subview):
           None
       """
       self.last_visited = -1
-      for label in self.box_list.values():
-        label.config(image=self.unvisited_box)
+      for _, _, box_label, ticket_label in self.box_list.values():
+        box_label.config(image=self.unvisited_box)
+        ticket_label.grid_remove()
       
     def _clearFrame(self):
       """

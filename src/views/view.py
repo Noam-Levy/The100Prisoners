@@ -118,8 +118,6 @@ class View():
         prisoner_number = int(self.settings_frame.pris_entry.get())
         simulation_number = int(self.settings_frame.sim_entry.get())
         next_guess = listener.fetch_next_guess(simulation_number, prisoner_number)
-        if next_guess == prisoner_number: # first guess or user changed requested simulation number or prisoner number
-          self.simulation_view.resetBoxes()
         
         # set box matrix view
         self.simulation_view.drawVisitingBox(next_guess - 1) # box illustrations are stored in a zero based array
@@ -136,3 +134,12 @@ class View():
         None
     """
     self.root.quit()
+
+  def on_reset(self):
+    """
+      Setter function for resetting simulation settings
+      Returns:
+        None  
+    """
+    self.settings_frame.reset()
+    self.prisonerData.reset()
