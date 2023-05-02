@@ -60,7 +60,7 @@ class GuessOptimized(Strategy, ModelEventsListener):
                     (success: bool, execution_time: float visited_list: dict)
     """
 
-    def execute(self, number_of_prisoners):          
+    def execute(self, number_of_prisoners):
         visited_list = {} # tracks each prisoner's decision path (which boxes were looked in)
         boxes = [i for i in range(number_of_prisoners)] 
         random.shuffle(boxes) # shuffle boxes values
@@ -70,12 +70,12 @@ class GuessOptimized(Strategy, ModelEventsListener):
         for prisoner_number in range(number_of_prisoners):
             visited = [] # keeps track of prisoner's decision path 
             ticket_number = boxes[prisoner_number]
-            while len(visited) < (number_of_prisoners // 2): # allow current prisoner to guess upto guess limit 
-                visited.append(ticket_number)
+            while len(visited) < number_of_prisoners // 2: # allow current prisoner to guess upto guess limit 
                 if ticket_number == prisoner_number: # check if box contains current prisoner number
                     res[prisoner_number] = 1
                     break
-                ticket_number = boxes[ticket_number] # current prisoner picks the box numbered as the current ticket
+                visited.append(ticket_number)
+                ticket_number = boxes[ticket_number] # prisoner picks the box numbered as the current ticket
             visited_list[prisoner_number] = visited
         
         execution_time = timeit.default_timer() - t1

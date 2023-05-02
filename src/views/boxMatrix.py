@@ -53,7 +53,7 @@ class BoxMatrix(Subview):
          Returns:
             None
       """
-      self.average_solution_label.config(text = "Average solution time: {:.2f} seconds".format(average_time))
+      self.average_solution_label.config(text = "Average solution time: {:.5f} seconds".format(average_time))
 
     def drawVisitingBox(self, box_number):
       """
@@ -77,6 +77,7 @@ class BoxMatrix(Subview):
         Returns:
           None
       """
+      self.last_visited = -1
       for label in self.box_list.values():
         label.config(image=self.unvisited_box)
       
