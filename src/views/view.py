@@ -137,3 +137,6 @@ class View():
         None  
     """
     self.statistics_frame.reset()
+  
+  def on_rest_boxes_req(self):
+    self.simulation_view.resetBoxes()
