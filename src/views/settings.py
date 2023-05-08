@@ -97,8 +97,11 @@ class SettingsView(Subview):
     if simulation_number == "":
       return True
     
-    res = simulation_number.isdigit() and (MIN_SIMULATIONS_COUNT <= int(simulation_number) <= self.number_of_simulations.get())
-    return res 
+    res= simulation_number.isdigit() and (1 <= int(simulation_number) <= self.number_of_simulations.get())
+    if res:
+      self.setErrorMessage()
+      self.onInvalidUserEntry("")
+    return res
 
   def _validate_prisoner_number(self, prisoner_number):
     """
@@ -106,9 +109,14 @@ class SettingsView(Subview):
     """
     if prisoner_number == "":
       return True
-
-    res = prisoner_number.isdigit() and (MIN_PRISONER_COUNT <= int(prisoner_number) <= self.number_of_prisoners.get())
+    res = prisoner_number.isdigit() and (1 <= int(prisoner_number) <= self.number_of_prisoners.get())
+    if res:
+      self.setErrorMessage()
+      self.onInvalidUserEntry("")
     return res
+  
+  def onInvalidUserEntry(self, state=DISABLED):
+    self.next_button.config(state=state)
   
   def setErrorMessage(self, value=""):
     """
@@ -192,19 +200,21 @@ class SettingsView(Subview):
     # Simulation number and prisoner number entries
     sim_val_func = self.root.register(self._validate_simulation_number)
     pris_val_func = self.root.register(self._validate_prisoner_number)
+    invalid_cmd = self.root.register(self.onInvalidUserEntry)
+
 
     self.sim_num_label = ttk.Label(self.root,
               text="Simulation number",
               font=(DEFAULT_FONT, DEFAULT_FONT_SIZE),
               bootstyle=(LIGHT, INVERSE))
-    self.sim_entry = ttk.Entry(self.root, validate="focusout", validatecommand=(sim_val_func, '%P'))
+    self.sim_entry = ttk.Entry(self.root, validate="focusout", validatecommand=(sim_val_func, '%P'), invalidcommand=invalid_cmd)
 
 
     self.pris_num_label = ttk.Label(self.root,
               text="Prisoner number",
               font=(DEFAULT_FONT, DEFAULT_FONT_SIZE),
               bootstyle=(LIGHT, INVERSE))
-    self.pris_entry = ttk.Entry(self.root, validate="focusout", validatecommand=(pris_val_func, '%P'))
+    self.pris_entry = ttk.Entry(self.root, validate="focusout", validatecommand=(pris_val_func, '%P'), invalidcommand=invalid_cmd)
 
     # Control buttons
     self.start_button.grid(row=8, column=0, pady=DEFAULT_PADDING)

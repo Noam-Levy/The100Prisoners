@@ -1,5 +1,4 @@
 import ttkbootstrap as ttk
-from tkinter import messagebox
 from ttkbootstrap.constants import *
 import time
 
@@ -61,36 +60,6 @@ class View():
 
     self.root.mainloop()
   
-  def displaySimulationResults(self, results):
-    """
-      Handling the display of simulation results
-      Parameters: 
-        results (tuple) - simulation results data (success rate, average solution time, prisoners guesses lists)
-      Returns: None
-    """
-    delay = self.simulationSpeed.get()
-    _, exec_time, visited_list = results
-    self.simulation_view.setAverageSimulationTime(exec_time)
-    for prisoner_number, guess_list in visited_list[0].items():
-      self.prisonerData.setPrisonerNumber(prisoner_number + 1)
-      self.prisonerData.resetGuessNumber()
-      l = len(guess_list)
-      for index, guess in enumerate(guess_list):
-        # set prisoner data view
-        self.prisonerData.setBoxNumber(guess + 1)
-        if not self.strategySelector.get() == RANDOM_STRATEGY and index < l - 1:
-          self.prisonerData.setFoundNumber(guess_list[index + 1])
-
-        # set box matrix view
-        self.simulation_view.drawVisitingBox(guess)
-        
-        self.root.update()  # force GUI to update
-        time.sleep(delay)  # delay to help user to keep track of the simulation
-        self.prisonerData.incrementGuessNumber()
-      self.simulation_view.resetBoxes()
-      
-    self.settings_frame.enableControls()
-
   def displayStatistics(self, results):
     """
       Handling the display of the statistical calculations
@@ -128,25 +97,6 @@ class View():
     except:
       return
   
-  def displayNextGuess(self, generator):
-    """
-      Handles the display of the next guess in the simulation
-      Parameters: 
-        generator (generator) - a generator that yields the next guess
-      Returns: None
-    """
-    try:
-        guess = next(generator)
-        # set prisoner data view
-        self.prisonerData.setBoxNumber(guess + 1)
-
-        # set box matrix view
-        self.simulation_view.drawVisitingBox(guess)
-
-        self.root.update()  # force GUI to update
-    except StopIteration:
-        pass
-
   def on_start(self):
     """
       Listener function for simulation start button press\n
@@ -165,19 +115,17 @@ class View():
   def on_next(self):
     for listener in self._listeners:
       try:
-        next_guess = listener.fetch_next_guess(0,1)
-        print(next_guess)
-        # set prisoner data view
-        self.prisonerData.setBoxNumber(next_guess + 1)
-        # if not self.strategySelector.get() == RANDOM_STRATEGY:
-        #   self.prisonerData.setFoundNumber(guess_list[index + 1])
-
-        # set box matrix view
-        self.simulation_view.drawVisitingBox(next_guess)
+        prisoner_number = int(self.settings_frame.pris_entry.get())
+        simulation_number = int(self.settings_frame.sim_entry.get())
+        next_guess = listener.fetch_next_guess(simulation_number, prisoner_number)
         
+        # set box matrix view
+        self.simulation_view.drawVisitingBox(next_guess - 1) # box illustrations are stored in a zero based array
         self.root.update()  # force GUI to update
       except StopIteration:
-        pass 
+        self.settings_frame.onInvalidUserEntry() # disables "next" button
+      except ValueError as e:
+        self.settings_frame.setErrorMessage(e.args[0])
 
   def on_quit(self):
     """
@@ -186,3 +134,12 @@ class View():
         None
     """
     self.root.quit()
+
+  def on_reset(self):
+    """
+      Setter function for resetting simulation settings
+      Returns:
+        None  
+    """
+    self.settings_frame.reset()
+    self.prisonerData.reset()

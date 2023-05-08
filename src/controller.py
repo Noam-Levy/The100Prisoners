@@ -32,13 +32,21 @@ class Controller(UIEventsListener, ModelEventsListener):
         self.view.displaySimulationResults(report)
     
     def fetch_next_guess(self, simulationNumber: int, prisonerNumber: int):
-        print(prisonerNumber)
-        if self.reqPrisonerNumber != prisonerNumber or self.reqSimulationNumber != simulationNumber:
-            self._req_guess_list = self.model.results[2][simulationNumber][prisonerNumber]
+        if simulationNumber < 1 or self.model.simulations < simulationNumber:
+            raise ValueError("Invalid simulation number")
+        if prisonerNumber < 1 or self.model.number_of_prisoners < prisonerNumber:
+            raise ValueError("Invalid prisoner number")
+
+        if self._req_guess_list == None or self.reqPrisonerNumber != prisonerNumber or self.reqSimulationNumber != simulationNumber:
             self.reqPrisonerNumber = prisonerNumber
             self.reqSimulationNumber = simulationNumber
+            # create generator for requested prisoner and simulation
+            self._req_guess_list = (guess for guess in self.model.results[2][simulationNumber - 1][prisonerNumber - 1])
+            
+            if self.model.strategy.__class__ .__name__== GuessOptimized.__name__:
+                return prisonerNumber
 
-        guess = self._req_guess_list.pop(0)
-        return guess
+        return self._req_guess_list.__next__()
+
 
     

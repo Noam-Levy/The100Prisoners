@@ -72,4 +72,11 @@ class PrisonerDataView(Subview):
       """
       self.total_guesses.set(1)
       self.guess_number_label.config(text=f"Number of Guesses: {self.total_guesses.get()}")
+
+    def reset(self):
+      self.prisoner_number_label.config(text="Prisoner Number:")
+      self.box_number_label.config(text="Box Number:")
+      self.found_number_label.config(text="Found Number:")
+      self.guess_number_label.config(text="Number of Guesses:")
+       
       
