@@ -68,6 +68,7 @@ class Model():
     """
     if not self.strategy:
         raise ValueError("Strategy was not defined")
+    self.results = self.statisticsData = None # remove older simulation data
     
     sim_data = []
     total_successes = 0
