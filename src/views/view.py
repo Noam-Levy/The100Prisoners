@@ -38,19 +38,14 @@ class View():
     # Menu
     self.statistics_frame = StatisticsView(menu_frame)
     simulation_statistics_frame = self.statistics_frame.draw()
-    
-    self.prisonerData = PrisonerDataView(menu_frame)
-    prisoner_data_frame = self.prisonerData.draw()
-    
+        
     self.settings_frame = SettingsView(menu_frame, self.numberOfPrisoners, self.numberOfSimulations, self.strategySelector, self.simulationSpeed,
-                                       self.onNumberOfPrisonersChanged, self.on_start, self.on_quit, self.on_next)
+                                       self.onNumberOfPrisonersChanged, self.on_start, self.on_quit, self.on_next, self.on_reset)
     simulation_settings_frame = self.settings_frame.draw()
         
     simulation_statistics_frame.pack()
     ttk.Separator(menu_frame, bootstyle=SECONDARY).pack(pady=DEFAULT_PADDING, fill=X)
-    prisoner_data_frame.pack(ipadx=DEFAULT_PADDING)
-    ttk.Separator(menu_frame, bootstyle=SECONDARY).pack(pady=DEFAULT_PADDING, fill=X)
-    simulation_settings_frame.pack(ipadx=DEFAULT_PADDING)
+    simulation_settings_frame.pack(padx=DEFAULT_PADDING)
     menu_frame.pack(side=LEFT, fill=Y)
     
     # Simulation view
@@ -125,7 +120,7 @@ class View():
       except StopIteration:
         self.settings_frame.onInvalidUserEntry() # disables "next" button
       except ValueError as e:
-        self.settings_frame.setErrorMessage(e.args[0])
+        self.settings_frame.setErrorMessage("Please enter valid prisoner or simulation number")
 
   def on_quit(self):
     """
@@ -137,9 +132,8 @@ class View():
 
   def on_reset(self):
     """
-      Setter function for resetting simulation settings
+      Resetting simulation statistics
       Returns:
         None  
     """
-    self.settings_frame.reset()
-    self.prisonerData.reset()
+    self.statistics_frame.reset()

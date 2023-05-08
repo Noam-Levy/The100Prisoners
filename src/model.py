@@ -80,7 +80,6 @@ class Model():
         sim_data.append(visited_list)
         if success:  # checks if prisoners were successful in current simulation run
             total_successes += 1
-    self.executer.shutdown() # cleanup executors - will wait to executer to finish
     success_rate = (100 * (total_successes / self.simulations))
     average_sol_time = total_exec_time / self.simulations
     self.results = (success_rate, average_sol_time, sim_data)

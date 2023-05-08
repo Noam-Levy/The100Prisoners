@@ -10,6 +10,8 @@ class StatisticsView(Subview):
   def __init__(self, parent_frame):
       self.root = ttk.Frame(parent_frame, bootstyle=LIGHT)
       self.statistics = ttk.Canvas(self.root)
+      sns.set(rc={'figure.figsize':(4.5,4)}, font_scale=0.8)
+      
 
   def draw(self):
       ttk.Label(self.root, text = "Simulation Statistics", font=(DEFAULT_FONT, DEFAULT_HEADERS_SIZE), bootstyle=(LIGHT, INVERSE))\
@@ -44,4 +46,7 @@ class StatisticsView(Subview):
     figure = FigureCanvasTkAgg(plot.get_figure(), master=self.statistics)
     figure.get_tk_widget().pack()
     self.statistics.grid(row=1, column=1)   
+
+  def reset(self):
+      self.statistics.grid_remove()
              

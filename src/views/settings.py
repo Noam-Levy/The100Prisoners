@@ -11,7 +11,7 @@ class SettingsView(Subview):
                strategy: ttk.IntVar,
                simulation_speed: ttk.DoubleVar,
                onNumberOfPrisonersChanged: Callable,
-               on_start: Callable, on_quit: Callable, on_next: Callable):
+               on_start: Callable, on_quit: Callable, on_next: Callable, on_reset: Callable):
       
       self.root = ttk.Frame(parent_frame, bootstyle=LIGHT)
       self.number_of_prisoners = number_of_prisoners
@@ -69,7 +69,7 @@ class SettingsView(Subview):
                                                style='TCheckbutton')
       # buttons
       self.start_button = ttk.Button(self.root, text = "Start", bootstyle=SUCCESS, command=on_start)
-      self.reset_button = ttk.Button(self.root, text = "Reset", bootstyle=SECONDARY, command=self._on_reset)
+      self.reset_button = ttk.Button(self.root, text = "Reset", bootstyle=SECONDARY, command=lambda: self._on_reset(on_reset))
       self.quit_button = ttk.Button(self.root, text = "Quit", bootstyle=DANGER, command=on_quit)
       self.next_button = ttk.Button(self.root, text = "Next", bootstyle=INFO, command=on_next)
     
@@ -127,7 +127,7 @@ class SettingsView(Subview):
     self.errorMessage.config(text=value)
 
   
-  def _on_reset(self):
+  def _on_reset(self, on_reset: Callable):
     """
       Setter function for resetting simulation settings
       Returns:
@@ -138,6 +138,9 @@ class SettingsView(Subview):
     self.number_of_simulations.set(MIN_SIMULATIONS_COUNT)
     self._onNumberOfSimulationsChange(MIN_SIMULATIONS_COUNT)
     self.strategy.set(-1)
+    self.enableControls()
+    if on_reset:
+      on_reset()
 
   def disableControls(self):
     """
@@ -145,23 +148,23 @@ class SettingsView(Subview):
     """
     self.start_button.grid_remove()
     self.reset_button.grid_remove()
-    self.quit_button.grid_remove()
-    
+    self.reset_button.grid(row=8, column=0, pady=DEFAULT_PADDING, ipadx=DEFAULT_PADDING, columnspan=3, sticky=EW)
+        
     self.sim_num_label.grid(row=5, column=0, padx=DEFAULT_PADDING)
     self.sim_entry.grid(row=5, column=1, sticky=W, pady=DEFAULT_PADDING)
     
     self.pris_num_label.grid(row=6, column=0, padx=DEFAULT_PADDING)
-    self.pris_entry.grid(row=6, column=1, sticky=W, pady=DEFAULT_PADDING)
+    self.pris_entry.grid(row=6, column=1, sticky=W)
     
-    self.next_button.grid(row=8, column=1, pady=DEFAULT_PADDING)
+    self.next_button.grid(row=5, column=2, rowspan=2, sticky=EW, padx=DEFAULT_PADDING)
 
   def enableControls(self):
     """
       Adds basic controls into view and removes simulation controls from view
     """
     self.start_button.grid()
-    self.reset_button.grid()
-    self.quit_button.grid()
+    self.reset_button.grid_remove()
+    self.reset_button.grid(row=8, column=2, pady=DEFAULT_PADDING)
 
     self.sim_num_label.grid_remove()
     self.sim_entry.grid_remove()
@@ -217,9 +220,9 @@ class SettingsView(Subview):
     self.pris_entry = ttk.Entry(self.root, validate="focusout", validatecommand=(pris_val_func, '%P'), invalidcommand=invalid_cmd)
 
     # Control buttons
-    self.start_button.grid(row=8, column=0, pady=DEFAULT_PADDING)
-    self.reset_button.grid(row=8, column=1, pady=DEFAULT_PADDING)
-    self.quit_button.grid(row=8, column=2, pady=DEFAULT_PADDING, padx=DEFAULT_PADDING)
+    self.start_button.grid(row=8, column=0, pady=DEFAULT_PADDING, sticky=W)
+    self.reset_button.grid(row=8, column=2, pady=DEFAULT_PADDING)
+    self.quit_button.grid(row=9, column=0, pady=DEFAULT_PADDING, ipadx=DEFAULT_PADDING, columnspan=3, sticky=EW)
     
     # Error message
     self.errorMessage = ttk.Label(self.root,
