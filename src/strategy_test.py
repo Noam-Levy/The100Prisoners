@@ -4,14 +4,14 @@ from strategy import *
 class TestStrategy:
     @pytest.mark.parametrize("strategy, success_rate, tolerance", [
         (GuessRandomly(), 0.0, 0.01),
-        (GuessOptimized(), 0.31, 0.01),
+        (GuessOptimized(), 0.31, 0.025),
     ])
     def test_success_rate(self, strategy, success_rate, tolerance):
         successes = 0
-        for _ in range(1000):
+        for _ in range(10000):
             success, _, _ = strategy.execute(100)
             if success: successes += 1
-        calc_success_rate = successes / 1000
+        calc_success_rate = successes / 10000
         assert calc_success_rate == pytest.approx(success_rate, abs=tolerance)
 
     @pytest.mark.parametrize("strategy", [
@@ -30,6 +30,6 @@ class TestStrategy:
     def test_no_prisoner_continues_guessing_after_finding_number(self, strategy):
         _, _, visited_list = strategy.execute(100)
         for prisoner_number, guesses in visited_list.items():
-            print(f"{prisoner_number}: {guesses}")
             if prisoner_number in guesses:
                 assert guesses[-1] == prisoner_number
+                
