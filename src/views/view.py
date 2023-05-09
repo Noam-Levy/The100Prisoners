@@ -52,7 +52,8 @@ class View():
     self.simulation_view = BoxMatrix(self.root, self.numberOfPrisoners)
     simulation_view_frame = self.simulation_view.draw()
     simulation_view_frame.pack(padx=DEFAULT_PADDING, pady=DEFAULT_PADDING, anchor=CENTER)
-
+    
+    self.root.protocol('WM_DELETE_WINDOW', self.on_quit) # bind os window close button to the on_quit method
     self.root.mainloop()
   
   def displayStatistics(self, results):
@@ -63,6 +64,9 @@ class View():
       Returns: None
     """
     self.statistics_frame.showStatistics(results)
+
+  def displaySimulationResults(self, results):
+    self.simulation_view.setAverageSimulationTime(results[1])
 
   def onNumberOfPrisonersChanged(self):
     """
@@ -119,7 +123,7 @@ class View():
         self.root.update()  # force GUI to update
       except StopIteration:
         self.settings_frame.onInvalidUserEntry() # disables "next" button
-      except ValueError as e:
+      except ValueError:
         self.settings_frame.setErrorMessage("Please enter valid prisoner or simulation number")
 
   def on_quit(self):
@@ -139,4 +143,9 @@ class View():
     self.statistics_frame.reset()
   
   def on_rest_boxes_req(self):
+    """
+      Resetting simulation view boxes to unvisited state
+      Returns:
+        None
+    """
     self.simulation_view.resetBoxes()

@@ -10,7 +10,6 @@ class Controller(UIEventsListener, ModelEventsListener):
         self.view = view
         self.reqSimulationNumber = -1
         self.reqPrisonerNumber = -1
-        # self._req_guess_generator = None
         self._req_guess_list = None
         self.model.attach(self)
         self.view.attach(self)

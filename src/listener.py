@@ -17,3 +17,7 @@ class ModelEventsListener():
    @abstractmethod
    def statistics_report(self, report):
       raise NotImplementedError()
+   
+   @abstractmethod
+   def simulation_report(self, report):
+      raise NotImplementedError()
