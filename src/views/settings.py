@@ -142,13 +142,14 @@ class SettingsView(Subview):
     self.sim_entry.delete(0, END)
     self.pris_entry.delete(0, END)
 
+    # Reset the Next button color
+    self.next_button.configure(state="")
+    
     self.strategy.set(-1)
     self.enableControls()
     if on_reset:
       on_reset()
 
-    # Reset the Next button color
-    self.next_button.configure(state="")
 
   def disableControls(self):
     """
