@@ -137,10 +137,18 @@ class SettingsView(Subview):
     self._onNumberOfPrisonersChange(DEFAULT_PRISONERS_COUNT)
     self.number_of_simulations.set(MIN_SIMULATIONS_COUNT)
     self._onNumberOfSimulationsChange(MIN_SIMULATIONS_COUNT)
+
+    # Clear simulation number and prisoner number entries
+    self.sim_entry.delete(0, END)
+    self.pris_entry.delete(0, END)
+
     self.strategy.set(-1)
     self.enableControls()
     if on_reset:
       on_reset()
+
+    # Reset the Next button color
+    self.next_button.configure(state="")
 
   def disableControls(self):
     """
