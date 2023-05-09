@@ -9,15 +9,13 @@ class SettingsView(Subview):
                number_of_prisoners: ttk.IntVar,
                number_of_simulations: ttk.IntVar,
                strategy: ttk.IntVar,
-               simulation_speed: ttk.DoubleVar,
                onNumberOfPrisonersChanged: Callable,
-               on_start: Callable, on_quit: Callable, on_next: Callable, on_reset: Callable):
+               on_start: Callable, on_quit: Callable, on_reset: Callable):
       
       self.root = ttk.Frame(parent_frame, bootstyle=LIGHT)
       self.number_of_prisoners = number_of_prisoners
       self.number_of_simulations = number_of_simulations
       self.strategy = strategy
-      self.simulation_speed = simulation_speed
       self.onNumberOfPrisonersChanged = onNumberOfPrisonersChanged
 
       # scale values labels
@@ -59,19 +57,11 @@ class SettingsView(Subview):
                                                 offvalue=NO_STRATEGY_SELECTED,
                                                 bootstyle=(SECONDARY, ROUND, TOGGLE),
                                                 style='TCheckbutton')
-      self.speed_selector = ttk.Checkbutton(self.root,
-                                               text="Fast simulation",
-                                               variable=self.simulation_speed,
-                                               onvalue=SIMULATION_SPEED_FAST,
-                                               offvalue=SIMULATION_SPEED_SLOW,
-                                               bootstyle=(
-                                                   SECONDARY, ROUND, TOGGLE),
-                                               style='TCheckbutton')
+
       # buttons
       self.start_button = ttk.Button(self.root, text = "Start", bootstyle=SUCCESS, command=on_start)
       self.reset_button = ttk.Button(self.root, text = "Reset", bootstyle=SECONDARY, command=lambda: self._on_reset(on_reset))
       self.quit_button = ttk.Button(self.root, text = "Quit", bootstyle=DANGER, command=on_quit)
-      self.next_button = ttk.Button(self.root, text = "Next", bootstyle=INFO, command=on_next)
     
   def _onNumberOfPrisonersChange(self, value):
     """
@@ -89,34 +79,6 @@ class SettingsView(Subview):
         None
     """
     self.number_of_simulations_label.config(text = "{:04.0f}".format(int(float(value))))
-
-  def _validate_simulation_number(self, simulation_number):
-    """
-      Validates the selected simulation number
-    """
-    if simulation_number == "":
-      return True
-    
-    res= simulation_number.isdigit() and (1 <= int(simulation_number) <= self.number_of_simulations.get())
-    if res:
-      self.setErrorMessage()
-      self.onInvalidUserEntry("")
-    return res
-
-  def _validate_prisoner_number(self, prisoner_number):
-    """
-      Validates the selected prisoner number
-    """
-    if prisoner_number == "":
-      return True
-    res = prisoner_number.isdigit() and (1 <= int(prisoner_number) <= self.number_of_prisoners.get())
-    if res:
-      self.setErrorMessage()
-      self.onInvalidUserEntry("")
-    return res
-  
-  def onInvalidUserEntry(self, state=DISABLED):
-    self.next_button.config(state=state)
   
   def setErrorMessage(self, value=""):
     """
@@ -138,13 +100,9 @@ class SettingsView(Subview):
     self.number_of_simulations.set(MIN_SIMULATIONS_COUNT)
     self._onNumberOfSimulationsChange(MIN_SIMULATIONS_COUNT)
 
-    # Clear simulation number and prisoner number entries
-    self.sim_entry.delete(0, END)
-    self.pris_entry.delete(0, END)
+    # Clear any error messages
+    self.setErrorMessage()
 
-    # Reset the Next button color
-    self.next_button.configure(state="")
-    
     self.strategy.set(-1)
     self.enableControls()
     if on_reset:
@@ -158,16 +116,9 @@ class SettingsView(Subview):
     self.start_button.grid_remove()
     self.number_of_prisoners_scale.config(state=DISABLED)
     self.number_of_simulations_scale.config(state=DISABLED)
+    self.strategy_selector.config(state=DISABLED)
     self.reset_button.grid_remove()
     self.reset_button.grid(row=8, column=0, pady=DEFAULT_PADDING, ipadx=DEFAULT_PADDING, columnspan=3, sticky=EW)
-        
-    self.sim_num_label.grid(row=5, column=0, padx=DEFAULT_PADDING)
-    self.sim_entry.grid(row=5, column=1, sticky=W, pady=DEFAULT_PADDING)
-    
-    self.pris_num_label.grid(row=6, column=0, padx=DEFAULT_PADDING)
-    self.pris_entry.grid(row=6, column=1, sticky=W)
-    
-    self.next_button.grid(row=5, column=2, rowspan=2, sticky=EW, padx=DEFAULT_PADDING)
 
   def enableControls(self):
     """
@@ -176,16 +127,9 @@ class SettingsView(Subview):
     self.start_button.grid()
     self.number_of_prisoners_scale.config(state='')
     self.number_of_simulations_scale.config(state='')
+    self.strategy_selector.config(state='')
     self.reset_button.grid_remove()
     self.reset_button.grid(row=8, column=2, pady=DEFAULT_PADDING)
-
-    self.sim_num_label.grid_remove()
-    self.sim_entry.grid_remove()
-    
-    self.pris_num_label.grid_remove()
-    self.pris_entry.grid_remove()
-    
-    self.next_button.grid_remove()
      
   def draw(self):
     # Header
@@ -212,25 +156,6 @@ class SettingsView(Subview):
     # Strategy check buttons
     self.random_selector.grid(row=3, column=1, sticky=W, pady=DEFAULT_PADDING)
     self.strategy_selector.grid(row=4, column=1, sticky=W, pady=DEFAULT_PADDING)
-
-    # Simulation number and prisoner number entries
-    sim_val_func = self.root.register(self._validate_simulation_number)
-    pris_val_func = self.root.register(self._validate_prisoner_number)
-    invalid_cmd = self.root.register(self.onInvalidUserEntry)
-
-
-    self.sim_num_label = ttk.Label(self.root,
-              text="Simulation number",
-              font=(DEFAULT_FONT, DEFAULT_FONT_SIZE),
-              bootstyle=(LIGHT, INVERSE))
-    self.sim_entry = ttk.Entry(self.root, validate="key", validatecommand=(sim_val_func, '%P'), invalidcommand=invalid_cmd)
-
-
-    self.pris_num_label = ttk.Label(self.root,
-              text="Prisoner number",
-              font=(DEFAULT_FONT, DEFAULT_FONT_SIZE),
-              bootstyle=(LIGHT, INVERSE))
-    self.pris_entry = ttk.Entry(self.root, validate="key", validatecommand=(pris_val_func, '%P'), invalidcommand=invalid_cmd)
 
     # Control buttons
     self.start_button.grid(row=8, column=0, pady=DEFAULT_PADDING, sticky=W)

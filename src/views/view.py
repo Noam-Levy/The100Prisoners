@@ -5,7 +5,7 @@ import time
 from constants import *
 from views.settings import SettingsView
 from views.statistics import StatisticsView
-from views.prisonerData import PrisonerDataView
+from views.simulationControls import simulationControlsView
 from views.boxMatrix import BoxMatrix
 from listener import UIEventsListener
 
@@ -17,14 +17,17 @@ class View():
         View instance
     """
     self._listeners: list[UIEventsListener] = []
-    self.root = ttk.Window(title="The 100 Prisoners", themename="superhero", size=(DEFAULT_SCREEN_WIDTH, DEFAULT_SCREEN_HEIGHT), iconphoto='./src/images/prison.png')
+    self.root = ttk.Window(title="The 100 Prisoners",
+                           themename="superhero",
+                           size=(DEFAULT_SCREEN_WIDTH, DEFAULT_SCREEN_HEIGHT),
+                           iconphoto='./src/images/prison.png')
     self.root.style.configure('TCheckbutton', background=LIGHT_BG_HEX, foreground=DARK_FG_HEX)
     self.root.style.configure('TScale', background=LIGHT_BG_HEX, thumbcolor=DARK_FG_HEX)
     self.root.style.configure('TEntry', background=LIGHT_BG_HEX)
+
     self.strategySelector = ttk.IntVar(value=NO_STRATEGY_SELECTED)
     self.numberOfPrisoners = ttk.IntVar(value=DEFAULT_PRISONERS_COUNT)
     self.numberOfSimulations = ttk.IntVar(value=MIN_SIMULATIONS_COUNT)
-    self.simulationSpeed = ttk.DoubleVar(value=SIMULATION_SPEED_SLOW)
     self.prisonerData = {}
   
   def run(self):
@@ -33,20 +36,27 @@ class View():
       Returns:
         None
     """
-    menu_frame = ttk.Frame(self.root, bootstyle=LIGHT)
-    
     # Menu
+    menu_frame = ttk.Frame(self.root, bootstyle=LIGHT)
     self.statistics_frame = StatisticsView(menu_frame)
-    simulation_statistics_frame = self.statistics_frame.draw()
-        
-    self.settings_frame = SettingsView(menu_frame, self.numberOfPrisoners, self.numberOfSimulations, self.strategySelector, self.simulationSpeed,
-                                       self.onNumberOfPrisonersChanged, self.on_start, self.on_quit, self.on_next, self.on_reset)
-    simulation_settings_frame = self.settings_frame.draw()
-        
-    simulation_statistics_frame.pack()
+    self.simulation_controls = simulationControlsView(menu_frame, self.numberOfPrisoners, self.numberOfSimulations, self.on_next)
+    self.settings_frame = SettingsView(
+                                        menu_frame,
+                                        self.numberOfPrisoners,
+                                        self.numberOfSimulations,
+                                        self.strategySelector,
+                                        self.onNumberOfPrisonersChanged,
+                                        self.on_start,
+                                        self.on_quit,
+                                        self.on_reset
+                                      )
+
+    self.statistics_frame.draw().pack()
     ttk.Separator(menu_frame, bootstyle=SECONDARY).pack(pady=DEFAULT_PADDING, fill=X)
-    simulation_settings_frame.pack(padx=DEFAULT_PADDING)
-    menu_frame.pack(side=LEFT, fill=Y)
+    self.simulation_controls.draw().pack()
+    ttk.Separator(menu_frame, bootstyle=SECONDARY).pack(pady=DEFAULT_PADDING, fill=X)
+    self.settings_frame.draw().pack()
+    menu_frame.pack(side=LEFT, fill=Y, ipadx=DEFAULT_PADDING)
     
     # Simulation view
     self.simulation_view = BoxMatrix(self.root, self.numberOfPrisoners)
@@ -104,18 +114,20 @@ class View():
     """
     self.settings_frame.setErrorMessage()
     self.settings_frame.disableControls()
+    self.simulation_controls.enableControls()
     for listener in self._listeners:
       try:
         listener.start_simulation(self.strategySelector.get(), self.numberOfSimulations.get(), self.numberOfPrisoners.get())
       except ValueError as e:
         self.settings_frame.enableControls()
+        self.simulation_controls.enableControls()
         self.settings_frame.setErrorMessage(e.args[0])
 
   def on_next(self):
     for listener in self._listeners:
       try:
-        prisoner_number = int(self.settings_frame.pris_entry.get())
-        simulation_number = int(self.settings_frame.sim_entry.get())
+        prisoner_number = int(self.simulation_controls.pris_num_entry.get())
+        simulation_number = int(self.simulation_controls.sim_num_entry.get())
         next_guess = listener.fetch_next_guess(simulation_number, prisoner_number)
         
         # set box matrix view
@@ -141,6 +153,7 @@ class View():
         None  
     """
     self.statistics_frame.reset()
+    self.simulation_controls.reset()
   
   def rest_boxes_request(self):
     """
