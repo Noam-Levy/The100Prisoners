@@ -9,10 +9,6 @@ class UIEventsListener():
    def fetch_next_guess(self, simulationNumber: int, prisonerNumber: int):
       raise NotImplementedError()
    
-   @abstractmethod
-   def on_rest_boxes_req(self):
-      raise NotImplementedError()
-
 class ModelEventsListener():
    @abstractmethod
    def statistics_report(self, report):

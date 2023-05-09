@@ -142,7 +142,7 @@ class View():
     """
     self.statistics_frame.reset()
   
-  def on_rest_boxes_req(self):
+  def rest_boxes_request(self):
     """
       Resetting simulation view boxes to unvisited state
       Returns:

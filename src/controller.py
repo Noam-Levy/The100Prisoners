@@ -28,10 +28,7 @@ class Controller(UIEventsListener, ModelEventsListener):
         self.view.displayStatistics(report)
 
     def simulation_report(self, report):
-        self.view.displaySimulationResults(report)
-    
-    def reset_boxes(self):
-        self.view.on_rest_boxes_req()
+        self.view.displaySimulationResults(report)       
     
     def fetch_next_guess(self, simulationNumber: int, prisonerNumber: int):
         if simulationNumber < 1 or self.model.simulations < simulationNumber:
@@ -40,7 +37,7 @@ class Controller(UIEventsListener, ModelEventsListener):
             raise ValueError("Invalid prisoner number")
 
         if self._req_guess_list == None or self.reqPrisonerNumber != prisonerNumber or self.reqSimulationNumber != simulationNumber:
-            self.reset_boxes()
+            self.view.rest_boxes_request()
             self.reqPrisonerNumber = prisonerNumber
             self.reqSimulationNumber = simulationNumber
             # create generator for requested prisoner and simulation
