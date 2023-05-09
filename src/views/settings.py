@@ -20,13 +20,14 @@ class SettingsView(Subview):
 
       # scale values labels
       self.number_of_prisoners_label = ttk.Label(self.root,
-                                    text = self.number_of_prisoners.get(),
-                                    font=(DEFAULT_FONT, DEFAULT_FONT_SIZE),
-                                    bootstyle=(LIGHT, INVERSE))
+                                                 text = self.number_of_prisoners.get(),
+                                                 font=(DEFAULT_FONT, DEFAULT_FONT_SIZE),
+                                                 bootstyle=(LIGHT, INVERSE))
       self.number_of_simulations_label = ttk.Label(self.root,
-                                              text = self.number_of_simulations.get(),
-                                              font=(DEFAULT_FONT, DEFAULT_FONT_SIZE),
-                                              bootstyle=(LIGHT, INVERSE))
+                                                   text = self.number_of_simulations.get(),
+                                                   font=(DEFAULT_FONT, DEFAULT_FONT_SIZE),
+                                                   bootstyle=(LIGHT, INVERSE))
+      
       # simulation parameters scales
       self.number_of_prisoners_scale = ttk.Scale(self.root,
                                                   from_=MIN_PRISONER_COUNT,
@@ -42,6 +43,7 @@ class SettingsView(Subview):
                                                     command=self._onNumberOfSimulationsChange,
                                                     bootstyle=DARK,
                                                     style='TScale')
+      
       # prisoners strategies check buttons
       self.random_selector = ttk.Checkbutton(self.root,
                                                 text = "Select randomly",

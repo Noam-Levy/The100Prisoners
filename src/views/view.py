@@ -124,6 +124,12 @@ class View():
         self.settings_frame.setErrorMessage(e.args[0])
 
   def on_next(self):
+    """
+      Listener function for next button press.\n
+      the function handles all necessary logic to update the UI in accordance to the simulation results.
+      Returns:
+        None
+    """
     for listener in self._listeners:
       try:
         prisoner_number = int(self.simulation_controls.pris_num_entry.get())

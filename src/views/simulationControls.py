@@ -6,10 +6,7 @@ from constants import *
 from views.subview import Subview
 
 class simulationControlsView(Subview):
-  def __init__(self, parent_frame: ttk.Frame, 
-                number_of_prisoners: ttk.IntVar,
-                number_of_simulations: ttk.IntVar, 
-                on_next: Callable):
+  def __init__(self, parent_frame: ttk.Frame, number_of_prisoners: ttk.IntVar, number_of_simulations: ttk.IntVar, on_next: Callable):
       self.root = ttk.Frame(parent_frame, bootstyle=LIGHT)
       self.number_of_prisoners = number_of_prisoners
       self.number_of_simulations = number_of_simulations
@@ -19,13 +16,19 @@ class simulationControlsView(Subview):
       pris_val_func = self.root.register(self._validate_prisoner_number)
       invalid_cmd = self.root.register(self._onInvalidUserEntry)
       
-      self.next_button = ttk.Button(
-          self.root, text="Next", bootstyle=INFO, command=on_next)
-      self.sim_num_entry = ttk.Entry(self.root, validate="key", validatecommand=(
-          sim_val_func, '%P'), invalidcommand=invalid_cmd)
-      self.pris_num_entry = ttk.Entry(self.root, validate="key", validatecommand=(
-          pris_val_func, '%P'), invalidcommand=invalid_cmd)
+      self.sim_num_entry = ttk.Entry(self.root,
+                                     validate="key",
+                                     validatecommand=(sim_val_func, '%P'),
+                                     invalidcommand=invalid_cmd)
+      self.pris_num_entry = ttk.Entry(self.root,
+                                      validate="key",
+                                      validatecommand=(pris_val_func, '%P'),
+                                      invalidcommand=invalid_cmd)
       
+      # Next button
+      self.next_button = ttk.Button(self.root, text="Next", bootstyle=INFO, command=on_next)
+      
+      # Success/Failure message label
       self.success_fail_message = ttk.Label(
                                     self.root,
                                     text="",
@@ -104,5 +107,7 @@ class simulationControlsView(Subview):
     return res
   
   def _onInvalidUserEntry(self, state=DISABLED):
+    """
+      Helper method to set the next button state in accordance to user entry validation
+    """
     self.next_button.config(state=state)
-      
