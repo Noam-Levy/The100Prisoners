@@ -139,8 +139,9 @@ class View():
         # set box matrix view
         self.simulation_view.drawVisitingBox(next_guess - 1) # box illustrations are stored in a zero based array
         self.root.update()  # force GUI to update
+          
       except StopIteration:
-        self.settings_frame.onInvalidUserEntry() # disables "next" button
+        self.simulation_controls._onInvalidUserEntry()
       except ValueError:
         self.settings_frame.setErrorMessage("Please enter valid prisoner or simulation number")
 

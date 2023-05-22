@@ -90,6 +90,22 @@ class SettingsView(Subview):
     """
     self.errorMessage.config(text=value)
 
+  def setCorrectMessage(self, value=""):
+    """
+      setter for error message
+      Returns:
+        None
+    """
+    self.errorMessage.config(text=value)
+  
+  def setIncorrectMessage(self, value=""):
+    """
+      setter for error message
+      Returns:
+        None
+    """
+    self.errorMessage.config(text=value)
+
   
   def _on_reset(self, on_reset: Callable):
     """
