@@ -137,11 +137,12 @@ class View():
         next_guess = listener.fetch_next_guess(simulation_number, prisoner_number)
         
         # set box matrix view
-        self.simulation_view.drawVisitingBox(next_guess - 1) # box illustrations are stored in a zero based array
+        self.simulation_view.drawVisitingBox(next_guess) # box illustrations are stored in a zero based array
         self.root.update()  # force GUI to update
-          
       except StopIteration:
         self.simulation_controls._onInvalidUserEntry()
+        fail = self.simulation_view.last_visited != prisoner_number
+        self.simulation_controls.setSuccessFailMessage("Fail :(" if fail else "Success!", fail)
       except ValueError:
         self.settings_frame.setErrorMessage("Please enter valid prisoner or simulation number")
 

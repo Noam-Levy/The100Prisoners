@@ -24,12 +24,13 @@ class BoxMatrix(Subview):
       box_number, numberOfBoxes = 1, self.numberOfBoxes.get()
       for row in range(1, self.rows + 1):
         for col in range(self.cols):
-          if (box_number <= numberOfBoxes):
-            box_label = ttk.Label(self.root, image=self.unvisited_box, bootstyle=(LIGHT, INVERSE))
-            ticket_label = ttk.Label(self.root, text="", font=(DEFAULT_FONT, DEFAULT_SUBHEADERS_SIZE), bootstyle=(SECONDARY, INVERSE))
-            self.box_list[box_number - 1] = (row, col, box_label, ticket_label) # add box label and ticket label to the map in a zero based numbering
-            box_label.grid(row=row, column=col, padx=DEFAULT_PADDING, pady=DEFAULT_PADDING)
-            ttk.Label(self.root, text=box_number, bootstyle=(SECONDARY, INVERSE)).grid(row=row, column=col, sticky=S)
+          if (box_number > numberOfBoxes):
+            break
+          box_label = ttk.Label(self.root, image=self.unvisited_box, bootstyle=(LIGHT, INVERSE))
+          ticket_label = ttk.Label(self.root, text="", font=(DEFAULT_FONT, DEFAULT_SUBHEADERS_SIZE), bootstyle=(SECONDARY, INVERSE))
+          self.box_list[box_number] = (row, col, box_label, ticket_label) # add box label and ticket label to the map in a zero based numbering
+          box_label.grid(row=row, column=col, padx=DEFAULT_PADDING, pady=DEFAULT_PADDING)
+          ttk.Label(self.root, text=box_number, bootstyle=(SECONDARY, INVERSE)).grid(row=row, column=col, sticky=S)
           box_number += 1
           
       self.average_solution_label = ttk.Label(self.root, text="Average solution time: ", font=(DEFAULT_FONT, DEFAULT_SUBHEADERS_SIZE), bootstyle=(LIGHT, INVERSE))
@@ -54,7 +55,7 @@ class BoxMatrix(Subview):
          Returns:
             None
       """
-      self.average_solution_label.config(text = "Average solution time: {:.04f} seconds".format(average_time))
+      self.average_solution_label.config(text = "Average solution time: {:.06f} seconds".format(average_time))
 
     def drawVisitingBox(self, box_number):
       """
@@ -63,14 +64,11 @@ class BoxMatrix(Subview):
           box_number (int): referral box number
         Returns:
           None
-      """
-      if not box_number in self.box_list:
-        return
-      
+      """     
       if self.last_visited >= 0:
         row, col, box_label, ticket_label = self.box_list[self.last_visited]
         box_label.config(image=self.visited_box)
-        ticket_label.config(text=(box_number+1))
+        ticket_label.config(text=(box_number))
         ticket_label.grid(row=row, column=col)
        
       self.last_visited = box_number

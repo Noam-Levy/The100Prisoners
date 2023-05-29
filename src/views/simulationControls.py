@@ -79,6 +79,7 @@ class simulationControlsView(Subview):
   def reset(self):
     self.sim_num_entry.delete(0, END)
     self.pris_num_entry.delete(0, END)
+    self.setSuccessFailMessage()
     self.disableControls()
 
   def _validate_simulation_number(self, simulation_number):

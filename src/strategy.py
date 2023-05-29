@@ -33,12 +33,12 @@ class GuessRandomly(Strategy, ModelEventsListener):
         for prisoner_number in range(number_of_prisoners):
             visited = [] # keeps track of prisoner's guesses
             while len(visited) < (number_of_prisoners // 2): # allow current prisoner to guess upto guess limit 
-                current_box = random.randint(0, number_of_prisoners - 1)
+                current_box = random.randint(0, number_of_prisoners - 1) + 1
                 if current_box in visited:
                     continue
 
                 visited.append(current_box)
-                if current_box == prisoner_number: # check if box contains current prisoner number
+                if current_box - 1 == prisoner_number: # check if box contains current prisoner number
                     res[prisoner_number] = 1
                     break
             visited_list[prisoner_number] = visited
@@ -61,23 +61,25 @@ class GuessOptimized(Strategy, ModelEventsListener):
     """
 
     def execute(self, number_of_prisoners):
-        visited_list = {} # tracks each prisoner's decision path (which boxes were looked in)
-        boxes = [i for i in range(number_of_prisoners)] 
-        random.shuffle(boxes) # shuffle boxes values
-        res = number_of_prisoners * [0]
+        guess_lists = {} # tracks each prisoner's decision path (which boxes were looked in)
+        boxes = [i for i in range(number_of_prisoners)] # create boxes and shuffle "tickets"
+        random.shuffle(boxes)
         
-        t1 = timeit.default_timer()   
+        res = number_of_prisoners * [0]  # tracks success or failure of prisoner[k]
+        t1 = timeit.default_timer()
         for prisoner_number in range(number_of_prisoners):
-            visited = [] # keeps track of prisoner's decision path 
-            ticket_number = boxes[prisoner_number]
-            while len(visited) < number_of_prisoners // 2: # allow current prisoner to guess upto guess limit 
-                if ticket_number == prisoner_number: # check if box contains current prisoner number
+            guess_history = [] # saves the prisoner's guesses (which boxes were opened)
+            current_box = boxes[prisoner_number]
+            while len(guess_history) < number_of_prisoners // 2:
+                guess_history.append(current_box)
+                if current_box == prisoner_number:
                     res[prisoner_number] = 1
                     break
-                visited.append(ticket_number)
-                ticket_number = boxes[ticket_number] # prisoner picks the box numbered as the current ticket
-            visited_list[prisoner_number] = visited
+                else:
+                    current_box = boxes[current_box]
+            guess_lists[prisoner_number] = guess_history 
         
-        execution_time = timeit.default_timer() - t1
+        # aggregate data to return
         success = sum(res) == number_of_prisoners
-        return (success, execution_time, visited_list)
+        execution_time = timeit.default_timer() - t1
+        return (success, execution_time, guess_lists)

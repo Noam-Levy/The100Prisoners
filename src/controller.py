@@ -41,8 +41,7 @@ class Controller(UIEventsListener, ModelEventsListener):
             self.reqPrisonerNumber = prisonerNumber
             self.reqSimulationNumber = simulationNumber
             # create generator for requested prisoner and simulation
-            self._req_guess_list = (guess for guess in self.model.results[2][simulationNumber - 1][prisonerNumber - 1])
-            
+            self._req_guess_list = iter(self.model.results[2][simulationNumber - 1][prisonerNumber - 1])
             if self.model.strategy.__class__ .__name__== GuessOptimized.__name__:
                 return prisonerNumber
 

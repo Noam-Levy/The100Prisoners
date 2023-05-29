@@ -129,23 +129,25 @@ class SettingsView(Subview):
 
   def disableControls(self):
     """
-      Removes basic controls from view and adds simulation controls into view
+      Disables settings controls
     """
     self.start_button.grid_remove()
     self.number_of_prisoners_scale.config(state=DISABLED)
     self.number_of_simulations_scale.config(state=DISABLED)
     self.strategy_selector.config(state=DISABLED)
+    self.random_selector.config(state=DISABLED)
     self.reset_button.grid_remove()
     self.reset_button.grid(row=8, column=0, pady=DEFAULT_PADDING, ipadx=DEFAULT_PADDING, columnspan=3, sticky=EW)
 
   def enableControls(self):
     """
-      Adds basic controls into view and removes simulation controls from view
+      Enables settings controls
     """
     self.start_button.grid()
     self.number_of_prisoners_scale.config(state='')
     self.number_of_simulations_scale.config(state='')
     self.strategy_selector.config(state='')
+    self.random_selector.config(state='')
     self.reset_button.grid_remove()
     self.reset_button.grid(row=8, column=2, pady=DEFAULT_PADDING)
      

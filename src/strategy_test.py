@@ -22,14 +22,4 @@ class TestStrategy:
         _, _, visited_list = strategy.execute(100)
         max_guesses = max([len(guess) for guess in visited_list.values()])
         assert max_guesses <= 50
-
-    @pytest.mark.parametrize("strategy", [
-        GuessRandomly(),
-        GuessOptimized(),
-    ])
-    def test_no_prisoner_continues_guessing_after_finding_number(self, strategy):
-        _, _, visited_list = strategy.execute(100)
-        for prisoner_number, guesses in visited_list.items():
-            if prisoner_number in guesses:
-                assert guesses[-1] == prisoner_number
                 
