@@ -1,4 +1,5 @@
 import seaborn as sns
+import matplotlib.pyplot as plt
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
@@ -9,8 +10,7 @@ from views.subview import Subview
 class StatisticsView(Subview):
   def __init__(self, parent_frame):
       self.root = ttk.Frame(parent_frame, bootstyle=LIGHT)
-      self.statistics = ttk.Canvas(self.root)
-
+      
   def draw(self):
       ttk.Label(self.root, text = "Simulation Statistics", font=(DEFAULT_FONT, DEFAULT_HEADERS_SIZE), bootstyle=(LIGHT, INVERSE))\
         .grid(row=0, column=1, columnspan=5, sticky=N)
@@ -24,10 +24,10 @@ class StatisticsView(Subview):
       Returns:
         None
     """
-    self.statistics.delete("all") # remove possible existing statistics image
+    self.statistics = ttk.Canvas(self.root)
     # create the bar chart using Seaborn
+    plt.figure(figsize=(4.5, 4))
     plot = sns.barplot(x=list(data.keys()), y=list(data.values()), palette='Blues')
-    
     # add labels to axis and each bar
     for container in plot.containers:
       ax = plot.axes
@@ -44,4 +44,15 @@ class StatisticsView(Subview):
     figure = FigureCanvasTkAgg(plot.get_figure(), master=self.statistics)
     figure.get_tk_widget().pack()
     self.statistics.grid(row=1, column=1)   
+
+  def reset(self):
+    """
+      Resets the view
+    """
+    if self.statistics:
+      for child in self.statistics.winfo_children():
+        child.destroy() 
+      self.statistics.destroy()
+        
+        
              

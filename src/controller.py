@@ -6,11 +6,20 @@ from strategy import GuessRandomly, GuessOptimized
 
 class Controller(UIEventsListener, ModelEventsListener):
     def __init__(self, view: View, model: Model):
+        """
+        Initialize the MVC controller and runs the view
+        
+        Parameters:
+            view (View): simulation view instance
+            model (Model): simulation model instance
+        
+        Returns:
+            None
+        """
         self.model = model
         self.view = view
         self.reqSimulationNumber = -1
         self.reqPrisonerNumber = -1
-        # self._req_guess_generator = None
         self._req_guess_list = None
         self.model.attach(self)
         self.view.attach(self)
@@ -29,7 +38,7 @@ class Controller(UIEventsListener, ModelEventsListener):
         self.view.displayStatistics(report)
 
     def simulation_report(self, report):
-        self.view.displaySimulationResults(report)
+        self.view.displaySimulationResults(report)    
     
     def fetch_next_guess(self, simulationNumber: int, prisonerNumber: int):
         if simulationNumber < 1 or self.model.simulations < simulationNumber:
@@ -38,11 +47,11 @@ class Controller(UIEventsListener, ModelEventsListener):
             raise ValueError("Invalid prisoner number")
 
         if self._req_guess_list == None or self.reqPrisonerNumber != prisonerNumber or self.reqSimulationNumber != simulationNumber:
+            self.view.rest_boxes_request()
             self.reqPrisonerNumber = prisonerNumber
             self.reqSimulationNumber = simulationNumber
             # create generator for requested prisoner and simulation
-            self._req_guess_list = (guess for guess in self.model.results[2][simulationNumber - 1][prisonerNumber - 1])
-            
+            self._req_guess_list = iter(self.model.results[2][simulationNumber - 1][prisonerNumber - 1])
             if self.model.strategy.__class__ .__name__== GuessOptimized.__name__:
                 return prisonerNumber
 

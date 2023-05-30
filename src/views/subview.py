@@ -5,6 +5,7 @@ class Subview(ABC):
   def draw(self):
     """
       Getter method that returns the subview frame.
+      
       Returns:
         tkinter frame with all subview elements. 
     """
