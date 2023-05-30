@@ -46,10 +46,13 @@ class StatisticsView(Subview):
     self.statistics.grid(row=1, column=1)   
 
   def reset(self):
-      if self.statistics:
-        for child in self.statistics.winfo_children():
-          child.destroy() 
-        self.statistics.destroy()
+    """
+      Resets the view
+    """
+    if self.statistics:
+      for child in self.statistics.winfo_children():
+        child.destroy() 
+      self.statistics.destroy()
         
         
              

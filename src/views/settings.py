@@ -81,7 +81,7 @@ class SettingsView(Subview):
         None
     """
     self.number_of_simulations_label.config(text = "{:04.0f}".format(int(float(value))))
-  
+
   def setErrorMessage(self, value=""):
     """
       setter for error message

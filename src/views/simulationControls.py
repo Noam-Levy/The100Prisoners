@@ -77,6 +77,9 @@ class simulationControlsView(Subview):
       self.success_fail_message.config(text=message, foreground='red' if isError else 'green')
 
   def reset(self):
+    """
+      Resets the view
+    """
     self.sim_num_entry.delete(0, END)
     self.pris_num_entry.delete(0, END)
     self.setSuccessFailMessage()

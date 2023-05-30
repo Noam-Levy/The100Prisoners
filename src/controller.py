@@ -6,6 +6,16 @@ from strategy import GuessRandomly, GuessOptimized
 
 class Controller(UIEventsListener, ModelEventsListener):
     def __init__(self, view: View, model: Model):
+        """
+        Initialize the MVC controller and runs the view
+        
+        Parameters:
+            view (View): simulation view instance
+            model (Model): simulation model instance
+        
+        Returns:
+            None
+        """
         self.model = model
         self.view = view
         self.reqSimulationNumber = -1
@@ -28,7 +38,7 @@ class Controller(UIEventsListener, ModelEventsListener):
         self.view.displayStatistics(report)
 
     def simulation_report(self, report):
-        self.view.displaySimulationResults(report)       
+        self.view.displaySimulationResults(report)    
     
     def fetch_next_guess(self, simulationNumber: int, prisonerNumber: int):
         if simulationNumber < 1 or self.model.simulations < simulationNumber:

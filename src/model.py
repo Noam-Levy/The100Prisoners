@@ -9,10 +9,12 @@ class Model():
   def __init__(self, number_of_prisoners: int = MIN_PRISONER_COUNT, strategy: Strategy = None, simulations: int = MIN_SIMULATIONS_COUNT):
       """
         Initialize simulation model\n
+        
         Parameters:
           number_of_prisoners (int) - number of prisoners (n >= 2)\n
           simulations (int) - number of simulations (n >= 1)\n
           strategy (function) - selected guessing strategy of prisoners\n
+        
         Returns:
           Model instance
       """
@@ -27,8 +29,10 @@ class Model():
   def setNumberOfPrisoners(self, n: int):
       """
         Sets number of prisoners\n
+        
         Parameters: 
           n (int) - number of prisoners (n >= 2)
+        
         Returns:
           None
       """
@@ -39,8 +43,10 @@ class Model():
   def setNumberOfSimulations(self, n: int):
       """
         Sets number of simulation runs\n
+        
         Parameters: 
           n (int) - number of simulations (n >= 1)
+        
         Returns:
           None
       """
@@ -51,8 +57,10 @@ class Model():
   def setStrategy(self, strategy: Strategy):
     """
       Sets prisoners strategy\n
+      
       Parameters: 
         strategy (Strategy) - prisoners guessing strategy
+      
       Returns:
         None
     """
@@ -63,6 +71,7 @@ class Model():
   def run(self):
     """
       executes simulations implementing selected prisoners strategy.\n
+      
       Returns:
         None
     """
@@ -87,12 +96,33 @@ class Model():
     self._reportResults()
 
   def attach(self, observer: ModelEventsListener):
+      """
+        Adds new observer to the observer list
+        
+        Parameters:
+          observer (ModelEventsListener): observer to attach
+        
+        Returns:
+          None
+      """
       self._observers.append(observer)
     
   def detach(self, observer: ModelEventsListener):
+      """
+        Removes existing observer from the observer list
+        
+        Parameters:
+          observer (ModelEventsListener): observer to be removed
+        
+        Returns:
+          None
+      """
       self._observers.remove(observer)
 
   def _statisticsCreator(self):
+    """
+      Helper function to create the statistic report
+    """
     populations = list(filter(lambda x: x <= self.number_of_prisoners, [10, 25, 50, 100, 150]))
     interpolated_data = {}
     for pop in populations:
@@ -106,6 +136,9 @@ class Model():
     self.statisticsData = interpolated_data
  
   def _reportResults(self):
+    """
+      Helper function to send simulation results to the observers
+    """
     while not (self.statisticsData and self.results): # wait for both statistics and simulation results
        pass
     

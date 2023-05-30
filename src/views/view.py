@@ -1,6 +1,5 @@
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
-import time
 
 from constants import *
 from views.settings import SettingsView
