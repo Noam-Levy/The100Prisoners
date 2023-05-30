@@ -23,7 +23,8 @@ class View():
     self.root.style.configure('TCheckbutton', background=LIGHT_BG_HEX, foreground=DARK_FG_HEX)
     self.root.style.configure('TScale', background=LIGHT_BG_HEX, thumbcolor=DARK_FG_HEX)
     self.root.style.configure('TEntry', background=LIGHT_BG_HEX)
-
+    self.root.attributes('-fullscreen', True)
+    
     self.strategySelector = ttk.IntVar(value=NO_STRATEGY_SELECTED)
     self.numberOfPrisoners = ttk.IntVar(value=DEFAULT_PRISONERS_COUNT)
     self.numberOfSimulations = ttk.IntVar(value=MIN_SIMULATIONS_COUNT)
