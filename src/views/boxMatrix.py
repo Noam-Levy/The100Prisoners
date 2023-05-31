@@ -1,4 +1,5 @@
 from math import sqrt
+import os
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
 
@@ -11,9 +12,10 @@ class BoxMatrix(Subview):
         self.root = ttk.Frame(parent_frame, bootstyle=LIGHT)
         self.box_list = {} # hashes box labels for easy access to change state {box_number: (row, col, box_label, ticket_label)} 
         self.last_visited = -1 # keeps track of last visited box
-        self.unvisited_box = PhotoImage(file='./src/images/unvisited-box.png')
-        self.visited_box = PhotoImage(file='./src/images/visited-box.png')
-        self.visiting_box = PhotoImage(file='./src/images/prisoner-box.png')
+        image_dir = os.path.join(os.getcwd(), 'src', 'images')
+        self.unvisited_box = PhotoImage(file=os.path.join(image_dir, 'unvisited-box.png'))
+        self.visited_box = PhotoImage(file=os.path.join(image_dir,'visited-box.png'))
+        self.visiting_box = PhotoImage(file=os.path.join(image_dir,'prisoner-box.png'))
         self.numberOfBoxes = numberOfBoxes
         self.setNumberOfBoxes()
         

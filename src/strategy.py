@@ -37,7 +37,7 @@ class GuessRandomly(Strategy, ModelEventsListener):
                 if current_box in visited:
                     continue
 
-                visited.append(current_box)
+                visited.append(current_box + 1)
                 if current_box - 1 == prisoner_number: # check if box contains current prisoner number
                     res[prisoner_number] = 1
                     break
@@ -71,7 +71,7 @@ class GuessOptimized(Strategy, ModelEventsListener):
             guess_history = [] # saves the prisoner's guesses (which boxes were opened)
             current_box = boxes[prisoner_number]
             while len(guess_history) < number_of_prisoners // 2:
-                guess_history.append(current_box)
+                guess_history.append(current_box + 1)
                 if current_box == prisoner_number:
                     res[prisoner_number] = 1
                     break
