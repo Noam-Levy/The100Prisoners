@@ -24,7 +24,7 @@ class View():
     self.root.style.configure('TScale', background=LIGHT_BG_HEX, thumbcolor=DARK_FG_HEX)
     self.root.style.configure('TEntry', background=LIGHT_BG_HEX)
     self.root.attributes('-fullscreen', True)
-    
+      
     self.strategySelector = ttk.IntVar(value=NO_STRATEGY_SELECTED)
     self.numberOfPrisoners = ttk.IntVar(value=DEFAULT_PRISONERS_COUNT)
     self.numberOfSimulations = ttk.IntVar(value=MIN_SIMULATIONS_COUNT)
@@ -63,7 +63,10 @@ class View():
     simulation_view_frame = self.simulation_view.draw()
     simulation_view_frame.pack(padx=DEFAULT_PADDING, pady=DEFAULT_PADDING, anchor=CENTER)
     
-    self.root.protocol('WM_DELETE_WINDOW', self.on_quit) # bind os window close button to the on_quit method
+    # bind os window close button and escape to the on_quit method
+    self.root.protocol('WM_DELETE_WINDOW', self.on_quit) 
+    self.root.bind("<Escape>", lambda _: self.on_quit())
+    
     self.root.mainloop()
   
   def displayStatistics(self, results):
