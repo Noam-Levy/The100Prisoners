@@ -123,7 +123,7 @@ class Model():
     """
       Helper function to create the statistic report
     """
-    populations = list(filter(lambda x: x <= self.number_of_prisoners, [10, 25, 50, 100, 150]))
+    populations = list(filter(lambda x: x <= self.number_of_prisoners, [2,5] if self.number_of_prisoners < 10 else [2, 10, 25, 50, 100, 150]))
     interpolated_data = {}
     for pop in populations:
       results = [self.strategy.execute(pop) for _ in range(self.simulations)]
