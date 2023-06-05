@@ -32,14 +32,14 @@ class GuessRandomly(Strategy, ModelEventsListener):
         t1 = timeit.default_timer()
         for prisoner_number in range(number_of_prisoners):
             visited = [] # keeps track of prisoner's guesses
-            while len(visited) < (number_of_prisoners // 2): # allow current prisoner to guess upto guess limit 
+            while not res[prisoner_number]: # allow current prisoner to guess upto guess limit 
                 current_box = random.randint(0, number_of_prisoners - 1) + 1
                 if current_box in visited:
                     continue
 
                 visited.append(current_box + 1)
                 if current_box - 1 == prisoner_number: # check if box contains current prisoner number
-                    res[prisoner_number] = 1
+                    res[prisoner_number] = 1 if len(visited) < (number_of_prisoners // 2) else 0
                     break
             visited_list[prisoner_number] = visited
         
@@ -70,10 +70,10 @@ class GuessOptimized(Strategy, ModelEventsListener):
         for prisoner_number in range(number_of_prisoners):
             guess_history = [] # saves the prisoner's guesses (which boxes were opened)
             current_box = boxes[prisoner_number]
-            while len(guess_history) < number_of_prisoners // 2:
+            while not res[prisoner_number]:
                 guess_history.append(current_box + 1)
                 if current_box == prisoner_number:
-                    res[prisoner_number] = 1
+                    res[prisoner_number] = 1 if len(guess_history) < number_of_prisoners // 2 else 0
                     break
                 else:
                     current_box = boxes[current_box]
