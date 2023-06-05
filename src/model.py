@@ -132,19 +132,19 @@ class Model():
          if result[0]: # result = (success: bool, execution_time: float visited_list: dict)
             total_successes += 1
       
+      # calculate theoretical success rate 
       sum = 0
+      half_pop = pop / 2
       if self.strategy.__class__.__name__ == 'GuessOptimized':
-        half_pop = pop / 2
         for i in range(pop//2):
-          sum += 1/((half_pop) + (i+1))
+          sum += 1 / (half_pop + (i + 1))
         sum = 100 * (1 - sum)
       else:
-         sum = 100 * (total_successes / pop)
+         sum = 100 * (1 / 2 ** pop)
       
-      interpolated_data[pop] = [100 * (total_successes / self.simulations), sum]    
-    
+      interpolated_data[pop] = [100 * (total_successes / self.simulations), sum]
     self.statisticsData = interpolated_data
- 
+
   def _reportResults(self):
     """
       Helper function to send simulation results to the observers

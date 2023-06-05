@@ -34,8 +34,7 @@ class simulationControlsView(Subview):
                                     text="",
                                     font=(DEFAULT_FONT, DEFAULT_SUBHEADERS_SIZE),
                                     foreground='red',
-                                    bootstyle=(LIGHT, INVERSE)
-                                  )
+                                    bootstyle=(LIGHT, INVERSE))
       self.disableControls()
 
 
