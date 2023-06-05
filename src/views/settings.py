@@ -46,14 +46,14 @@ class SettingsView(Subview):
       
       # prisoners strategies check buttons
       self.random_selector = ttk.Checkbutton(self.root,
-                                                text = "Select randomly",
+                                                text = "Random Selection",
                                                 variable=self.strategy,
                                                 onvalue=RANDOM_STRATEGY,
                                                 offvalue=NO_STRATEGY_SELECTED,
                                                 bootstyle=(SECONDARY, ROUND, TOGGLE),
                                                 style='TCheckbutton')
       self.strategy_selector = ttk.Checkbutton(self.root,
-                                                text = "Apply strategy",
+                                                text = "Optimized Strategy",
                                                 variable=self.strategy,
                                                 onvalue=OPTIMIZED_STRATEGY,
                                                 offvalue=NO_STRATEGY_SELECTED,

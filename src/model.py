@@ -36,7 +36,7 @@ class Model():
         Returns:
           None
       """
-      if  n < 2:
+      if n < 2:
           raise ValueError("invalid number of prisoners")
       self.number_of_prisoners = n
   
@@ -132,7 +132,17 @@ class Model():
          if result[0]: # result = (success: bool, execution_time: float visited_list: dict)
             total_successes += 1
       
-      interpolated_data[pop] = 100 * (total_successes / self.simulations)    
+      sum = 0
+      if self.strategy.__class__.__name__ == 'GuessOptimized':
+        half_pop = pop / 2
+        for i in range(pop//2):
+          sum += 1/((half_pop) + (i+1))
+        sum = 100 * (1 - sum)
+      else:
+         sum = 100 * (total_successes / pop)
+      
+      interpolated_data[pop] = [100 * (total_successes / self.simulations), sum]    
+    
     self.statisticsData = interpolated_data
  
   def _reportResults(self):

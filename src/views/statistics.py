@@ -1,3 +1,4 @@
+import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 import ttkbootstrap as ttk
@@ -25,9 +26,21 @@ class StatisticsView(Subview):
         None
     """
     self.statistics = ttk.Canvas(self.root)
+    
+    # create dataframe from data dict
+    values = list(data.values())
+    df_data = {
+      'population': list(data.keys()),
+      'simulated success rate': list(map(lambda x: x[0], values)),
+      'calculated success rate': list(map(lambda x: x[1], values))
+    }
+    df = pd.DataFrame(df_data)
+    melted_df = pd.melt(df, id_vars=['population'], value_vars=['simulated success rate', 'calculated success rate'])    
+    
     # create the bar chart using Seaborn
-    plt.figure(figsize=(4.5, 4))
-    plot = sns.barplot(x=list(data.keys()), y=list(data.values()), palette='Blues')
+    plt.figure(figsize=(6, 4))
+    plot = sns.barplot(data=melted_df, x='population', y='value', hue='variable', palette='Blues')
+    plt.legend(loc='lower left')
     # add labels to axis and each bar
     for container in plot.containers:
       ax = plot.axes
