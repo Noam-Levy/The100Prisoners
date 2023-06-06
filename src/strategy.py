@@ -11,6 +11,13 @@ class Strategy(ABC):
 
     @abstractmethod
     def execute(self, number_of_prisoners):
+        """
+            initiates the execution of the simulation
+            :param number_of_prisoners: number of prisoners
+            :type number_of_prisoners: int
+            :returns: simulation results
+            :rtype: tuple
+        """
         raise NotImplementedError()
     
 class GuessRandomly(Strategy, ModelEventsListener): 
@@ -19,12 +26,8 @@ class GuessRandomly(Strategy, ModelEventsListener):
         This is the most obvious approach that can be taken by the prisoners,
         but it's surely the wrong one as it yields close to zero percent chance of winning.\n
         Methods:
-            execute(number_of_prisoners: int):
-                executes random guessing strategy.
-                returns simulation results:
-                    (success: bool, execution_time: float visited_list: dict)
+            execute: executes optimized guessing strategy.
     """
-
     def execute(self, number_of_prisoners):
         visited_list = {} # saves each prisoner guesses (which boxes were looked in)
         res = number_of_prisoners * [0]
@@ -54,12 +57,8 @@ class GuessOptimized(Strategy, ModelEventsListener):
         and then will follow the the tickets inside the boxes until he/she finds his/hers number.
         by following this strategy the chances of success are greatly improved to around 30%\n
         Methods:
-            execute(number_of_prisoners: int):
-                executes optimized guessing strategy.
-                returns simulation results:
-                    (success: bool, execution_time: float visited_list: dict)
+            execute: executes optimized guessing strategy.           
     """
-
     def execute(self, number_of_prisoners):
         guess_lists = {} # tracks each prisoner's decision path (which boxes were looked in)
         boxes = [i for i in range(number_of_prisoners)] # create boxes and shuffle "tickets"

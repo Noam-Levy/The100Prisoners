@@ -10,6 +10,13 @@ from views.subview import Subview
 
 class StatisticsView(Subview):
   def __init__(self, parent_frame):
+      """
+        Initializes the statistics subview
+        :param parent_frame: subview parent frame
+        :type parent_frame: ttk.Frame
+        :returns: None
+        :rtype: None
+      """
       self.root = ttk.Frame(parent_frame, bootstyle=LIGHT)
       
   def draw(self):
@@ -20,10 +27,10 @@ class StatisticsView(Subview):
   def showStatistics(self, data: dict):
     """
       Creates the statistics plot and packs it into the statistics frame.
-      Parameters:
-        data (dict): Statistics data dictionary containing the calculated success rate for each relevant population size
-      Returns:
-        None
+      :param data: Statistics data dictionary containing the calculated success rate for each relevant population size
+      :type data: dict
+      :returns: None
+      :rtype: None
     """
     self.statistics = ttk.Canvas(self.root)
     
@@ -41,6 +48,7 @@ class StatisticsView(Subview):
     plt.figure(figsize=(6, 4))
     plot = sns.barplot(data=melted_df, x='population', y='value', hue='variable', palette='Blues')
     plt.legend(loc='lower left')
+    
     # add labels to axis and each bar
     for container in plot.containers:
       ax = plot.axes
@@ -60,7 +68,9 @@ class StatisticsView(Subview):
 
   def reset(self):
     """
-      Resets the view
+      class function to reset the view
+      :returns: None
+      :rtype: None
     """
     if self.statistics:
       for child in self.statistics.winfo_children():
