@@ -85,7 +85,7 @@ class View():
     self.statistics_frame.showStatistics(results)
 
   def displaySimulationResults(self, results):
-    self.simulation_view.setAverageSimulationTime(results[1])
+    self.simulation_view.setResult(results)
 
   def onNumberOfPrisonersChanged(self):
     """
@@ -145,12 +145,14 @@ class View():
       return
     
     simulation_number = int(self.simulation_controls.sim_num_entry.get())
+
     if simulation_number != self.selectedSimulation:
       self.currentPrisoner = 1
       self.selectedSimulation = simulation_number
     
     for listener in self._listeners:
         next_run = listener.fetch_next_run(self.selectedSimulation, self.currentPrisoner)
+        self.displaySimulationResults(next_run)
         self._displaySimulationRun(next_run)
     
     self.currentPrisoner += 1

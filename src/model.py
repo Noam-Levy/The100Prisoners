@@ -147,7 +147,6 @@ class Model():
     
     for observer in self._observers:
         observer.statistics_report(self.statisticsData)
-        observer.simulation_report(self.results)
 
   def _calcTheoreticalSuccessRate(self, population):
     """

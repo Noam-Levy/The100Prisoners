@@ -35,8 +35,8 @@ class BoxMatrix(Subview):
           ttk.Label(self.root, text=box_number, bootstyle=(SECONDARY, INVERSE)).grid(row=row, column=col, sticky=S)
           box_number += 1
           
-      self.average_solution_label = ttk.Label(self.root, text="Average solution time: ", font=(DEFAULT_FONT, DEFAULT_SUBHEADERS_SIZE), bootstyle=(LIGHT, INVERSE))
-      self.average_solution_label.grid(row=self.rows + 1, columnspan=MAX_COLS, pady=DEFAULT_PADDING)
+      self.result_label = ttk.Label(self.root, text=" ", font=(DEFAULT_FONT, DEFAULT_FONT_SIZE), bootstyle=(LIGHT, INVERSE))
+      self.result_label.grid(row=self.rows + 1, columnspan=MAX_COLS, pady=DEFAULT_PADDING)
       return self.root
     
     def setNumberOfBoxes(self):
@@ -51,13 +51,25 @@ class BoxMatrix(Subview):
       cols = (numberOfBoxes // self.rows) if (sqrt(numberOfBoxes)).is_integer() else (numberOfBoxes // self.rows) + 1
       self.cols = min(cols, MAX_COLS)
 
-    def setAverageSimulationTime(self, average_time):
+    def setResult(self, result):
       """
          Setter function for average solution time label
          Returns:
             None
       """
-      self.average_solution_label.config(text = "Average solution time: {:.06f} seconds".format(average_time))
+
+      data, success = result
+      success_arr = []
+      fail_arr = []
+      for prisoner_num, guest_list in data.items():
+        if len(guest_list) > self.numberOfBoxes.get()//2:
+          fail_arr.append(prisoner_num+1)
+        else:
+          success_arr.append(prisoner_num+1)
+
+      self.result_label.config(text =
+                                "Simulation Result: {}\nThe prisoners that succeeded:\n{}\nThe prisoners that failed:\n{}"
+                               .format("Success" if success else "Fail" , success_arr, fail_arr))
 
     def drawVisitingBox(self, box_number):
       """
