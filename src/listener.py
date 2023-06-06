@@ -15,18 +15,18 @@ class UIEventsListener():
             None
       """
       raise NotImplementedError()
-   
+
    @abstractmethod
-   def fetch_next_guess(self, simulationNumber: int, prisonerNumber: int):
+   def fetch_next_run(self, simulationNumber: int, prisonerNumber: int):
       """
-         fetches the next guess for the given prisoner in a given simulation
+         fetches the simulation data for the given prisoner in a given simulation
          
          Parameters:
             simulationNumber (int): simulation number
             prisonerNumber (int): prisoner number
          
          Returns: 
-            guessed box number (int)
+            simulation run (tuple): (visit list, success)
       """
       raise NotImplementedError()
 

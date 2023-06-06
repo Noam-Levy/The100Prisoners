@@ -1,5 +1,6 @@
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
+import time
 
 from constants import *
 from views.settings import SettingsView
@@ -28,7 +29,8 @@ class View():
     self.strategySelector = ttk.IntVar(value=NO_STRATEGY_SELECTED)
     self.numberOfPrisoners = ttk.IntVar(value=DEFAULT_PRISONERS_COUNT)
     self.numberOfSimulations = ttk.IntVar(value=MIN_SIMULATIONS_COUNT)
-    self.prisonerData = {}
+    self.currentPrisoner = 1
+    self.selectedSimulation = -1
   
   def run(self):
     """
@@ -133,21 +135,21 @@ class View():
       Returns:
         None
     """
+    if self.currentPrisoner > self.numberOfPrisoners.get():
+      # print simulation results
+      self.currentPrisoner = 1 # TODO: CURRENTLY ALLOWS FOR THE RUN TO REPEAT - THINK
+      return
+    
+    simulation_number = int(self.simulation_controls.sim_num_entry.get())
+    if simulation_number != self.selectedSimulation:
+      self.currentPrisoner = 1
+      self.selectedSimulation = simulation_number
+    
     for listener in self._listeners:
-      try:
-        prisoner_number = int(self.simulation_controls.pris_num_entry.get())
-        simulation_number = int(self.simulation_controls.sim_num_entry.get())
-        next_guess = listener.fetch_next_guess(simulation_number, prisoner_number)
-        
-        # set box matrix view
-        self.simulation_view.drawVisitingBox(next_guess) # box illustrations are stored in a zero based array
-        self.root.update()  # force GUI to update
-      except StopIteration:
-        self.simulation_controls._onInvalidUserEntry()
-        fail = self.simulation_view.last_visited != prisoner_number
-        self.simulation_controls.setSuccessFailMessage("Fail :(" if fail else "Success!", fail)
-      except ValueError:
-        self.settings_frame.setErrorMessage("Please enter valid prisoner or simulation number")
+        next_run = listener.fetch_next_run(self.selectedSimulation, self.currentPrisoner)
+        self._displaySimulationRun(next_run)
+    
+    self.currentPrisoner += 1
 
   def on_quit(self):
     """
@@ -165,6 +167,8 @@ class View():
     """
     self.statistics_frame.reset()
     self.simulation_controls.reset()
+    self.currentPrisoner = 1
+    self.selectedSimulation = -1
   
   def rest_boxes_request(self):
     """
@@ -173,3 +177,28 @@ class View():
         None
     """
     self.simulation_view.resetBoxes()
+
+  def _displaySimulationRun(self, data):
+    """
+      Handling the display of a prisoner path
+      
+      Parameters:
+        data (tuple): prisoner run data (guess list, success)
+      
+      Returns:
+        None
+    """
+    delay = SIMULATION_SPEED_MEDIUM # TODO: get simulation speed
+    guess_list, success = data
+    if self.strategySelector.get() == OPTIMIZED_STRATEGY:
+      self.simulation_view.drawVisitingBox(self.currentPrisoner)
+      self.root.update()  # force GUI to update
+      time.sleep(delay)
+    
+    prisoner_guess_list = guess_list[self.currentPrisoner - 1]
+    for guess in prisoner_guess_list:
+      time.sleep(delay)
+      self.simulation_view.drawVisitingBox(guess)
+      self.root.update()  # force GUI to update
+    
+    # TODO: set prisoner run results text

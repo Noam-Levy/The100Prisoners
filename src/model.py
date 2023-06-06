@@ -85,11 +85,12 @@ class Model():
     self.executer.submit(self._statisticsCreator) # assign one thread to create simulation statistics
     futures = [self.executer.submit(self.strategy.execute, self.number_of_prisoners) for _ in range(self.simulations)]
     for future in concurrent.futures.as_completed(futures):
-        success, exec_time, visited_list = future.result() # (success: bool, execution_time: float visited_list: dict)
+        success, exec_time, visited_list = future.result() # (success: bool, execution_time: float, sim_data: (visited_list: dict, success: bool))
         total_exec_time += exec_time
-        sim_data.append(visited_list)
+        sim_data.append((visited_list, success))
         if success:  # checks if prisoners were successful in current simulation run
             total_successes += 1
+   
     success_rate = (100 * (total_successes / self.simulations))
     average_sol_time = total_exec_time / self.simulations
     self.results = (success_rate, average_sol_time, sim_data)
@@ -127,22 +128,14 @@ class Model():
     interpolated_data = {}
     for pop in populations:
       results = [self.strategy.execute(pop) for _ in range(self.simulations)]
+      theoretical_success_rate = self._calcTheoreticalSuccessRate(pop)
       total_successes = 0
       for result in results:
-         if result[0]: # result = (success: bool, execution_time: float visited_list: dict)
+         if result[0]: # result = (success: bool, execution_time: float, sim_data: tuple)
             total_successes += 1
-      
-      # calculate theoretical success rate 
-      sum = 0
-      half_pop = pop / 2
-      if self.strategy.__class__.__name__ == 'GuessOptimized':
-        for i in range(pop//2):
-          sum += 1 / (half_pop + (i + 1))
-        sum = 100 * (1 - sum)
-      else:
-         sum = 100 * (1 / 2 ** pop)
-      
-      interpolated_data[pop] = [100 * (total_successes / self.simulations), sum]
+
+      interpolated_data[pop] = [100 * (total_successes / self.simulations), theoretical_success_rate]
+    
     self.statisticsData = interpolated_data
 
   def _reportResults(self):
@@ -155,3 +148,24 @@ class Model():
     for observer in self._observers:
         observer.statistics_report(self.statisticsData)
         observer.simulation_report(self.results)
+
+  def _calcTheoreticalSuccessRate(self, population):
+    """
+      Calculated the theoretical success rate for the given population
+      The calculation is based on the selected strategy and its respective mathematical equation.
+
+      Parameters:
+        population (int): the number of prisoners
+      Returns:
+        success rate int percent (float)
+    """
+    if not self.strategy.__class__.__name__ == 'GuessOptimized':
+       return 100 * (1 / 2 ** population)
+    
+    sum = 0
+    half_pop = population / 2
+    for i in range(population//2):
+      sum += 1 / (half_pop + (i + 1))
+    
+    return 100 * (1 - sum)
+
