@@ -27,7 +27,7 @@ class StatisticsView(Subview):
   def showStatistics(self, data: dict):
     """
       Creates the statistics plot and packs it into the statistics frame.
-      :param data:  Statistics data dictionary containing the calculated success rate for each relevant population size
+      :param data: Statistics data dictionary containing the calculated success rate for each relevant population size
       :type data: dict
       :returns: None
       :rtype: None

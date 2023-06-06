@@ -79,27 +79,34 @@ class simulationControlsView(Subview):
 
   def disableControls(self):
     """
-      Disables basic controls from view and adds simulation controls into view
+      Disables basic controls
       :returns: None
       :rtype: None
     """
     self.next_button.config(state=DISABLED)
     self.sim_num_entry.config(state=DISABLED)
-    self.slow_selector.config(state=DISABLED)
-    self.medium_selector.config(state=DISABLED)
-    self.fast_selector.config(state=DISABLED)
+    self.setSpeedControls()
 
   def enableControls(self):
     """
-      Enables basic controls from view and adds simulation controls into view
+      Enables basic controls
       :returns: None
       :rtype: None
     """
     self.next_button.config(state='')
     self.sim_num_entry.config(state='')
-    self.slow_selector.config(state='')
-    self.medium_selector.config(state='')
-    self.fast_selector.config(state='')
+    self.setSpeedControls('')
+
+  def setSpeedControls(self, state=DISABLED):
+    """
+      sets speed controls to be enabled or disabled
+      :param state: desired speed control state, default is disabled
+      :returns: None
+      :rtype: None
+    """
+    self.slow_selector.config(state=state)
+    self.medium_selector.config(state=state)
+    self.fast_selector.config(state=state)
 
   def reset(self):
     """
