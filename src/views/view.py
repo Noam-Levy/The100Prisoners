@@ -12,7 +12,7 @@ from listener import UIEventsListener
 class View():
   def __init__(self):
     """
-      Initialize simulation view\n
+      Initialize main view\n
       Returns:
         View instance
     """
@@ -22,6 +22,7 @@ class View():
                            size=(DEFAULT_SCREEN_WIDTH, DEFAULT_SCREEN_HEIGHT),
                            iconphoto='./src/images/prison.png')
     self.root.style.configure('TCheckbutton', background=LIGHT_BG_HEX, foreground=DARK_FG_HEX)
+    self.root.style.configure('TRadiobutton', background=LIGHT_BG_HEX, foreground=DARK_FG_HEX)
     self.root.style.configure('TScale', background=LIGHT_BG_HEX, thumbcolor=DARK_FG_HEX)
     self.root.style.configure('TEntry', background=LIGHT_BG_HEX)
     self.root.attributes('-fullscreen', True)
@@ -29,6 +30,7 @@ class View():
     self.strategySelector = ttk.IntVar(value=NO_STRATEGY_SELECTED)
     self.numberOfPrisoners = ttk.IntVar(value=DEFAULT_PRISONERS_COUNT)
     self.numberOfSimulations = ttk.IntVar(value=MIN_SIMULATIONS_COUNT)
+    self.simulationSpeed = ttk.DoubleVar(value=SIMULATION_SPEED_MEDIUM)
     self.currentPrisoner = 1
     self.selectedSimulation = -1
   
@@ -41,7 +43,7 @@ class View():
     # Menu
     menu_frame = ttk.Frame(self.root, bootstyle=LIGHT)
     self.statistics_frame = StatisticsView(menu_frame)
-    self.simulation_controls = simulationControlsView(menu_frame, self.numberOfPrisoners, self.numberOfSimulations, self.on_next)
+    self.simulation_controls = simulationControlsView(menu_frame, self.numberOfSimulations, self.simulationSpeed, self.on_next)
     self.settings_frame = SettingsView(
                                         menu_frame,
                                         self.numberOfPrisoners,
@@ -188,7 +190,7 @@ class View():
       Returns:
         None
     """
-    delay = SIMULATION_SPEED_MEDIUM # TODO: get simulation speed
+    delay = self.simulationSpeed.get()
     guess_list, success = data
     if self.strategySelector.get() == OPTIMIZED_STRATEGY:
       self.simulation_view.drawVisitingBox(self.currentPrisoner)
