@@ -1,7 +1,8 @@
-import ttkbootstrap as ttk
-from ttkbootstrap.constants import *
 import os
 import time
+import ttkbootstrap as ttk
+from ttkbootstrap.constants import *
+from playsound import playsound
 
 from constants import *
 from views.settings import SettingsView
@@ -154,7 +155,7 @@ class View():
     self.currentPrisoner += 1
     if self.currentPrisoner > self.numberOfPrisoners.get():
       self.simulation_controls.next_button.config(state=DISABLED)
-      self.currentPrisoner = 1 # TODO: CURRENTLY ALLOWS FOR THE RUN TO REPEAT - THINK
+      self.currentPrisoner = 1
 
   def on_quit(self):
     """
@@ -193,19 +194,29 @@ class View():
       Returns:
         None
     """
+    self.settings_frame.reset_button.config(state=DISABLED) # disable reset button during simulation run
     delay = self.simulationSpeed.get()
+    
     guess_list = data[0]
     if self.strategySelector.get() == OPTIMIZED_STRATEGY:
       self.simulation_view.drawVisitingBox(self.currentPrisoner)
-      self.root.update()  # force GUI to update
+      self.root.update() # force GUI to update
       time.sleep(delay)
-    
     prisoner_guess_list = guess_list[self.currentPrisoner - 1]
     for guess in prisoner_guess_list:
       time.sleep(delay)
       self.simulation_view.drawVisitingBox(guess)
-      self.root.update()  # force GUI to update
+      self.root.update()
     
-    result = 'Failed' if len(prisoner_guess_list) > self.numberOfPrisoners.get() // 2 else 'Success'
-    self.simulation_view.setPrisonerResult(self.currentPrisoner, result)
+    number_of_guesses = len(prisoner_guess_list)
+    guess_limit = self.numberOfPrisoners.get() // 2
+    result = None
+    if number_of_guesses >  guess_limit:
+      result=f"Failed ({number_of_guesses} guesses)"
+      playsound(os.path.join(os.getcwd(), 'sounds', 'fail.mp3'))
+    else:
+      result=f"Success ({number_of_guesses} guesses)"
+      playsound(os.path.join(os.getcwd(), 'sounds', 'success.mp3'))
 
+    self.simulation_view.setPrisonerResult(self.currentPrisoner, result)
+    self.settings_frame.reset_button.config(state='') # re-enable reset button

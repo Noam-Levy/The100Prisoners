@@ -1,5 +1,6 @@
 from math import sqrt
 import os
+import textwrap
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
 
@@ -35,11 +36,11 @@ class BoxMatrix(Subview):
           ttk.Label(self.root, text=box_number, bootstyle=(SECONDARY, INVERSE)).grid(row=row, column=col, sticky=S)
           box_number += 1
 
-      self.prisoner_result_label = ttk.Label(self.root, text=" ", font=(DEFAULT_FONT, DEFAULT_FONT_SIZE), bootstyle=(LIGHT, INVERSE))
-      self.prisoner_result_label.grid(row=self.rows + 1, columnspan=MAX_COLS, pady=DEFAULT_PADDING)  
+      self.prisoner_result_label = ttk.Label(self.root, text="", font=(DEFAULT_FONT, DEFAULT_FONT_SIZE + 2), bootstyle=(LIGHT, INVERSE))
+      self.prisoner_result_label.grid(row=self.rows + 1, pady=DEFAULT_PADDING, columnspan=MAX_COLS)  
 
-      self.result_label = ttk.Label(self.root, text=" ", font=(DEFAULT_FONT, DEFAULT_FONT_SIZE), bootstyle=(LIGHT, INVERSE))
-      self.result_label.grid(row=self.rows + 2, columnspan=MAX_COLS, pady=DEFAULT_PADDING)
+      self.result_label = ttk.Label(self.root, text="", font=(DEFAULT_FONT, DEFAULT_FONT_SIZE + 2), bootstyle=(LIGHT, INVERSE))
+      self.result_label.grid(row=self.rows + 2, column=0, columnspan=MAX_COLS, sticky=EW)
       return self.root
     
     def setNumberOfBoxes(self):
@@ -56,16 +57,16 @@ class BoxMatrix(Subview):
     
     def setPrisonerResult(self, prisoner_number,result):
       """
-      TODO write about the setter
+      TODO: write about the setter
       """
       self.prisoner_result_label.config(text="Prisoner Number {}: {}"
                                         .format(prisoner_number,result))
 
     def setResult(self, result):
       """
-         Setter function for average solution time label
-         Returns:
-            None
+        Setter function for average solution time label
+        Returns:
+          None
       """
       data, success = result
       success_arr = []
@@ -75,10 +76,20 @@ class BoxMatrix(Subview):
           fail_arr.append(prisoner_num+1)
         else:
           success_arr.append(prisoner_num+1)
-
-      self.result_label.config(text =
-                                "Simulation Result: {}\nThe prisoners that succeeded:\n{}\nThe prisoners that failed:\n{}"
-                               .format("Success" if success else "Fail" , success_arr, fail_arr))
+      text = f"\
+      Simulation Result: {'Success' if success else 'Fail'}\n\
+      {len(success_arr)} prisoners succeeded: {success_arr}\n\
+      {len(fail_arr)} prisoners failed: {fail_arr}\n\
+      "
+                     
+      self.result_label.config(text=textwrap.fill(
+                                text,
+                                width=200,
+                                replace_whitespace=False,
+                                drop_whitespace=False,
+                                expand_tabs=False,
+                                break_long_words=False,
+                                subsequent_indent=' '*6))
 
     def drawVisitingBox(self, box_number):
       """
