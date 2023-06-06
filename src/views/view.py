@@ -1,5 +1,6 @@
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
+import os
 import time
 
 from constants import *
@@ -17,16 +18,17 @@ class View():
         View instance
     """
     self._listeners: list[UIEventsListener] = []
+    image_dir = os.path.join(os.getcwd(), 'images', 'prison.png')
     self.root = ttk.Window(title="The 100 Prisoners",
                            themename="superhero",
                            size=(DEFAULT_SCREEN_WIDTH, DEFAULT_SCREEN_HEIGHT),
-                           iconphoto='./src/images/prison.png')
+                           iconphoto=image_dir)
     self.root.style.configure('TCheckbutton', background=LIGHT_BG_HEX, foreground=DARK_FG_HEX)
     self.root.style.configure('TRadiobutton', background=LIGHT_BG_HEX, foreground=DARK_FG_HEX)
     self.root.style.configure('TScale', background=LIGHT_BG_HEX, thumbcolor=DARK_FG_HEX)
     self.root.style.configure('TEntry', background=LIGHT_BG_HEX)
     self.root.attributes('-fullscreen', True)
-      
+
     self.strategySelector = ttk.IntVar(value=NO_STRATEGY_SELECTED)
     self.numberOfPrisoners = ttk.IntVar(value=DEFAULT_PRISONERS_COUNT)
     self.numberOfSimulations = ttk.IntVar(value=MIN_SIMULATIONS_COUNT)

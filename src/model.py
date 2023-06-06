@@ -13,7 +13,7 @@ class Model():
         Parameters:
           number_of_prisoners (int) - number of prisoners (n >= 2)\n
           simulations (int) - number of simulations (n >= 1)\n
-          strategy (function) - selected guessing strategy of prisoners\n
+          strategy (class) - selected guessing strategy of prisoners\n
         
         Returns:
           Model instance
