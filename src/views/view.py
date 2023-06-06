@@ -129,7 +129,7 @@ class View():
         listener.start_simulation(self.strategySelector.get(), self.numberOfSimulations.get(), self.numberOfPrisoners.get())
       except ValueError as e:
         self.settings_frame.enableControls()
-        self.simulation_controls.enableControls()
+        self.simulation_controls.disableControls()
         self.settings_frame.setErrorMessage(e.args[0])
 
   def on_next(self):

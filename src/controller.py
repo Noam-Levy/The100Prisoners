@@ -7,14 +7,13 @@ from strategy import GuessRandomly, GuessOptimized
 class Controller(UIEventsListener, ModelEventsListener):
     def __init__(self, view: View, model: Model):
         """
-        Initialize the MVC controller and runs the view
-        
-        Parameters:
-            view (View): simulation view instance
-            model (Model): simulation model instance
-        
-        Returns:
-            None
+            Initialize the MVC controller and runs the view
+            :param view: simulation view instance
+            :type view: View
+            :param model: simulation model instance
+            :type model: Model
+            :returns: None
+            :rtype: None
         """
         self.model = model
         self.view = view

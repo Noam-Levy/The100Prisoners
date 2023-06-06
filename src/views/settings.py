@@ -11,7 +11,27 @@ class SettingsView(Subview):
                strategy: ttk.IntVar,
                onNumberOfPrisonersChanged: Callable,
                on_start: Callable, on_quit: Callable, on_reset: Callable):
-      
+      """
+        Initializes the simulation settings subview
+        :param parent_frame: subview parent frame
+        :type parent_frame: ttk.Frame
+        :param number_of_prisoners: pointer to the number of prisoners variable
+        :type number_of_prisoners: ttk.IntVar
+        :param number_of_simulations: pointer to the number of simulations variable
+        :type number_of_simulations: ttk.IntVar
+        :param strategy: pointer to the selected strategy variable
+        :type strategy: ttk.IntVar
+        :param onNumberOfPrisonersChanged: pointer to a function to be called when user changes the number of prisoners variable
+        :type onNumberOfPrisonersChanged: Callable
+        :param on_start: pointer to a function to be called when user selects simulation start
+        :type on_start: Callable
+        :param on_quit: pointer to a function to be called when user quits the program
+        :type on_quit: Callable
+        :param on_reset: pointer to a function to be called when user resets the simulation
+        :type on_reset: Callable
+        :returns: None
+        :rtype: None
+      """      
       self.root = ttk.Frame(parent_frame, bootstyle=LIGHT)
       self.number_of_prisoners = number_of_prisoners
       self.number_of_simulations = number_of_simulations
@@ -67,51 +87,42 @@ class SettingsView(Subview):
     
   def _onNumberOfPrisonersChange(self, value):
     """
-      Listener for number of prisoners value change
-      Returns:
-        None
+      Listener class function for number of prisoners change
+      :param value: new number of prisoners value
+      :type value: float
+      :returns: None
+      :rtype: None
     """
     self.number_of_prisoners_label.config(text = "{:03.0f}".format(int(float(value))))
     self.onNumberOfPrisonersChanged()
   
   def _onNumberOfSimulationsChange(self, value):
     """
-      Listener for number of simulations value change
-      Returns:
-        None
+      Listener class function for number of simulations change
+      :param value: new number of simulations value
+      :type value: float
+      :returns: None
+      :rtype: None
     """
     self.number_of_simulations_label.config(text = "{:04.0f}".format(int(float(value))))
 
   def setErrorMessage(self, value=""):
     """
       setter for error message
-      Returns:
-        None
+      :param value: optional, new error message
+      :type value: string
+      :returns: None
+      :rtype: None
     """
     self.errorMessage.config(text=value)
-
-  def setCorrectMessage(self, value=""):
-    """
-      setter for error message
-      Returns:
-        None
-    """
-    self.errorMessage.config(text=value)
-  
-  def setIncorrectMessage(self, value=""):
-    """
-      setter for error message
-      Returns:
-        None
-    """
-    self.errorMessage.config(text=value)
-
   
   def _on_reset(self, on_reset: Callable):
     """
       Setter function for resetting simulation settings
-      Returns:
-        None  
+      :param on_reset: pointer to a function to be called when user resets the simulation
+      :type on_reset: Callable
+      :returns: None
+      :rtype: None
     """
     self.number_of_prisoners.set(DEFAULT_PRISONERS_COUNT)
     self._onNumberOfPrisonersChange(DEFAULT_PRISONERS_COUNT)
@@ -130,6 +141,8 @@ class SettingsView(Subview):
   def disableControls(self):
     """
       Disables settings controls
+      :returns: None
+      :rtype: None
     """
     self.start_button.grid_remove()
     self.number_of_prisoners_scale.config(state=DISABLED)
@@ -142,6 +155,8 @@ class SettingsView(Subview):
   def enableControls(self):
     """
       Enables settings controls
+      :returns: None
+      :rtype: None
     """
     self.start_button.grid()
     self.number_of_prisoners_scale.config(state='')

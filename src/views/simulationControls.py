@@ -7,6 +7,19 @@ from views.subview import Subview
 
 class simulationControlsView(Subview):
   def __init__(self, parent_frame: ttk.Frame, number_of_simulations: ttk.IntVar, simulation_speed: ttk.DoubleVar, on_next: Callable):
+      """
+        Initializes the simulation controls subview
+        :param parent_frame: subview parent frame
+        :type parent_frame: ttk.Frame
+        :param number_of_simulations: pointer to the number of simulations variable
+        :type number_of_simulations: ttk.IntVar
+        :param simulation_speed: pointer to the simulation speed variable
+        :type simulation_speed: ttk.DoubleVar
+        :param on_next: pointer to a function to be called when user presses the next button
+        :type on_next: Callable
+        :returns: None
+        :rtype: None
+      """
       self.root = ttk.Frame(parent_frame, bootstyle=LIGHT)
       self.number_of_simulations = number_of_simulations
       self.simulation_speed = simulation_speed
@@ -67,6 +80,8 @@ class simulationControlsView(Subview):
   def disableControls(self):
     """
       Disables basic controls from view and adds simulation controls into view
+      :returns: None
+      :rtype: None
     """
     self.next_button.config(state=DISABLED)
     self.sim_num_entry.config(state=DISABLED)
@@ -77,6 +92,8 @@ class simulationControlsView(Subview):
   def enableControls(self):
     """
       Enables basic controls from view and adds simulation controls into view
+      :returns: None
+      :rtype: None
     """
     self.next_button.config(state='')
     self.sim_num_entry.config(state='')
@@ -87,13 +104,19 @@ class simulationControlsView(Subview):
   def reset(self):
     """
       Resets the view
+      :returns: None
+      :rtype: None
     """
     self.sim_num_entry.delete(0, END)
     self.disableControls()
 
   def _validate_simulation_number(self, simulation_number):
     """
-      Validates the selected simulation number
+      Class function to validate the selected simulation number
+      :param simulation_number: selected simulation number
+      :type simulation_number: int
+      :returns: None
+      :rtype: None
     """
     if simulation_number == "":
       return True
@@ -105,6 +128,10 @@ class simulationControlsView(Subview):
   
   def _onInvalidUserEntry(self, state=DISABLED):
     """
-      Helper method to set the next button state in accordance to user entry validation
+      Class function to set the next button state in accordance to user entry validation
+      :param simulation_number: new state, optional, default is disabled
+      :type simulation_number: string
+      :returns: None
+      :rtype: None
     """
     self.next_button.config(state=state)

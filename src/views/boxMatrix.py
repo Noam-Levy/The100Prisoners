@@ -9,6 +9,15 @@ from views.subview import Subview
 
 class BoxMatrix(Subview):
     def __init__(self, parent_frame, numberOfBoxes: ttk.IntVar):
+        """
+          Initializes the box matrix subview
+          :param parent_frame: subview parent frame
+          :type parent_frame: ttk.Frame
+          :param numberOfBoxes: number of boxes to be displayed
+          :type numberOfBoxes: ttk.IntVar
+          :returns: None
+          :rtype: None
+        """
         self.root = ttk.Frame(parent_frame, bootstyle=LIGHT)
         self.box_list = {} # hashes box labels for easy access to change state {box_number: (row, col, box_label, ticket_label)} 
         self.last_visited = -1 # keeps track of last visited box
@@ -41,10 +50,10 @@ class BoxMatrix(Subview):
     
     def setNumberOfBoxes(self):
       """
-         Setter function for total number boxes (which is also the total number of prisoners)\n
-         the function determines how many rows and columns should be drawn
-         Returns:
-            None
+          Setter function for total number boxes (which is also the total number of prisoners)
+          the function determines how many rows and columns should be drawn
+          :returns: None
+          :rtype: None
       """
       numberOfBoxes = self.numberOfBoxes.get()
       self.rows = min(int(sqrt(numberOfBoxes)), MAX_ROWS)
@@ -53,19 +62,21 @@ class BoxMatrix(Subview):
 
     def setAverageSimulationTime(self, average_time):
       """
-         Setter function for average solution time label
-         Returns:
-            None
+        Setter function for average solution time label
+        :param average_time: average solution time
+        :type average_time: float
+        :returns: None
+        :rtype: None
       """
       self.average_solution_label.config(text = "Average solution time: {:.06f} seconds".format(average_time))
 
     def drawVisitingBox(self, box_number):
       """
         Sets requested box image to show prisoner visiting and sets last visited box image to visited
-        Parameters:
-          box_number (int): referral box number
-        Returns:
-          None
+        :param box_number: box number to be set as visiting
+        :type box_number: int
+        :returns: None
+        :rtype: None
       """     
       if self.last_visited >= 0:
         row, col, box_label, ticket_label = self.box_list[self.last_visited]
@@ -79,8 +90,8 @@ class BoxMatrix(Subview):
     def resetBoxes(self):
       """
         Resets boxes image to unvisited
-        Returns:
-          None
+        :returns: None
+        :rtype: None
       """
       self.last_visited = -1
       for _, _, box_label, ticket_label in self.box_list.values():
@@ -90,8 +101,8 @@ class BoxMatrix(Subview):
     def _clearFrame(self):
       """
         Clears all widgets currently packed into the matrix frame
-        Returns:
-          None
+        :returns: None
+        :rtype: None
       """
       self.box_list.clear()
       for widget in self.root.winfo_children():

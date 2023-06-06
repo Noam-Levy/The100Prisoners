@@ -4,9 +4,8 @@ class Subview(ABC):
   @abstractmethod
   def draw(self):
     """
-      Getter method that returns the subview frame.
-      
-      Returns:
-        tkinter frame with all subview elements. 
+      Draws the subview frame.
+      :returns: frame with all subview elements
+      :rtype: ttk.Frame
     """
     raise NotImplementedError()
