@@ -138,12 +138,7 @@ class View():
       the function handles all necessary logic to update the UI in accordance to the simulation results.
       Returns:
         None
-    """
-    if self.currentPrisoner > self.numberOfPrisoners.get():
-      self.currentPrisoner = 1 # TODO: CURRENTLY ALLOWS FOR THE RUN TO REPEAT - THINK
-      self.simulation_view.setPrisonerResult(prisonerNum, result)
-      return
-    
+    """   
     simulation_number = int(self.simulation_controls.sim_num_entry.get())
 
     if simulation_number != self.selectedSimulation:
@@ -153,9 +148,13 @@ class View():
     for listener in self._listeners:
         next_run = listener.fetch_next_run(self.selectedSimulation, self.currentPrisoner)
         self.displaySimulationResults(next_run)
+        self.simulation_view.setPrisonerResult(self.currentPrisoner, '')
         self._displaySimulationRun(next_run)
-    
+        
     self.currentPrisoner += 1
+    if self.currentPrisoner > self.numberOfPrisoners.get():
+      self.simulation_controls.next_button.config(state=DISABLED)
+      self.currentPrisoner = 1 # TODO: CURRENTLY ALLOWS FOR THE RUN TO REPEAT - THINK
 
   def on_quit(self):
     """
@@ -195,7 +194,7 @@ class View():
         None
     """
     delay = self.simulationSpeed.get()
-    guess_list, success = data
+    guess_list = data[0]
     if self.strategySelector.get() == OPTIMIZED_STRATEGY:
       self.simulation_view.drawVisitingBox(self.currentPrisoner)
       self.root.update()  # force GUI to update
@@ -207,10 +206,6 @@ class View():
       self.simulation_view.drawVisitingBox(guess)
       self.root.update()  # force GUI to update
     
-    if len(guess_list) > self.numberOfPrisoners.get()//2:
-      result = 'Success'
-    else:
-      result = 'Failed'
-    
+    result = 'Failed' if len(prisoner_guess_list) > self.numberOfPrisoners.get() // 2 else 'Success'
     self.simulation_view.setPrisonerResult(self.currentPrisoner, result)
 
