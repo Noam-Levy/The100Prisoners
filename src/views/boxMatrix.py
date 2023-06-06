@@ -34,9 +34,12 @@ class BoxMatrix(Subview):
           box_label.grid(row=row, column=col, padx=DEFAULT_PADDING, pady=DEFAULT_PADDING)
           ttk.Label(self.root, text=box_number, bootstyle=(SECONDARY, INVERSE)).grid(row=row, column=col, sticky=S)
           box_number += 1
-          
+
+      self.prisoner_result_label = ttk.Label(self.root, text=" ", font=(DEFAULT_FONT, DEFAULT_FONT_SIZE), bootstyle=(LIGHT, INVERSE))
+      self.prisoner_result_label.grid(row=self.rows + 1, columnspan=MAX_COLS, pady=DEFAULT_PADDING)  
+
       self.result_label = ttk.Label(self.root, text=" ", font=(DEFAULT_FONT, DEFAULT_FONT_SIZE), bootstyle=(LIGHT, INVERSE))
-      self.result_label.grid(row=self.rows + 1, columnspan=MAX_COLS, pady=DEFAULT_PADDING)
+      self.result_label.grid(row=self.rows + 2, columnspan=MAX_COLS, pady=DEFAULT_PADDING)
       return self.root
     
     def setNumberOfBoxes(self):
@@ -50,6 +53,13 @@ class BoxMatrix(Subview):
       self.rows = min(int(sqrt(numberOfBoxes)), MAX_ROWS)
       cols = (numberOfBoxes // self.rows) if (sqrt(numberOfBoxes)).is_integer() else (numberOfBoxes // self.rows) + 1
       self.cols = min(cols, MAX_COLS)
+    
+    def setPrisonerResult(self, prisoner_number,result):
+      """
+      TODO write about the setter
+      """
+      self.prisoner_result_label.config(text="Prisoner Number {}: {}"
+                                        .format(prisoner_number,result))
 
     def setResult(self, result):
       """
@@ -57,7 +67,6 @@ class BoxMatrix(Subview):
          Returns:
             None
       """
-
       data, success = result
       success_arr = []
       fail_arr = []

@@ -86,7 +86,7 @@ class View():
 
   def displaySimulationResults(self, results):
     self.simulation_view.setResult(results)
-
+   
   def onNumberOfPrisonersChanged(self):
     """
       Listener function for prisoner number scale change\n
@@ -140,8 +140,8 @@ class View():
         None
     """
     if self.currentPrisoner > self.numberOfPrisoners.get():
-      # print simulation results
       self.currentPrisoner = 1 # TODO: CURRENTLY ALLOWS FOR THE RUN TO REPEAT - THINK
+      self.simulation_view.setPrisonerResult(prisonerNum, result)
       return
     
     simulation_number = int(self.simulation_controls.sim_num_entry.get())
@@ -207,4 +207,10 @@ class View():
       self.simulation_view.drawVisitingBox(guess)
       self.root.update()  # force GUI to update
     
-    # TODO: set prisoner run results text
+    if len(guess_list) > self.numberOfPrisoners.get()//2:
+      result = 'Success'
+    else:
+      result = 'Failed'
+    
+    self.simulation_view.setPrisonerResult(self.currentPrisoner, result)
+
